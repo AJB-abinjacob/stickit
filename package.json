@@ -1,0 +1,38 @@
+{
+  "name": "stickit",
+  "version": "1.0.0",
+  "description": "Think about something. Yes, we have a sticker for that.",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "tail-build": "tailwindcss -i ./public/css/tailwind.css -o ./public/css/style.css",
+    "tail-watch": "tailwindcss -i ./public/css/tailwind.css -o ./public/css/style.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "stickit"
+  },
+  "keywords": [
+    "stickit",
+    "stickers",
+    "stickitup",
+    "stickiton",
+    "laptop",
+    "stickers"
+  ],
+  "author": "Umar Muqthar",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "connect-mongodb-session": "^3.1.1",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "mongodb": "^4.12.1",
+    "nocache": "^3.0.4"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.2.4"
+  }
+}
