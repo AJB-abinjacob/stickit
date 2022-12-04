@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/admin-head") %>
+  </head>
+  <body class="bg-backgroundGray">
+    <section class="flex">
+      <%- include("./layouts/sidebar") %>
+
+      <main id="main-content" class="grow">
+        <%- include("./layouts/header") %>
+        <!-- actual content -->
+        <section class="px-10 mt-5 mb-36">
+          <!-- overview -->
+          <h1 class="font-semibold text-2xl">Overview</h1>
+          <%- include("./components/dashboard/overview-dashboard") %>
+
+          <!-- sales -->
+          <h1 class="font-semibold text-2xl mt-8">Sales</h1>
+          <%- include("./components/dashboard/sales-dashboard") %>
+          <!--  -->
+          <%- include("./components/orders/orders-table") %>
+        </section>
+      </main>
+    </section>
+  </body>
+</html>

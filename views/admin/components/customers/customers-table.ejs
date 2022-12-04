@@ -1,0 +1,65 @@
+<div class="flex flex-col bg-white rounded-lg justify-between border mt-5">
+  <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+    <div class="inline-block min-w-full sm:px-6 lg:px-8">
+      <div class="overflow-x-auto">
+        <table class="min-w-full">
+          <thead class="bg-lightGray border-b">
+            <tr>
+              <th
+                scope="col"
+                class="text-xs font-semibold text-darkGray px-6 py-2 text-left"
+              >
+                NAME
+              </th>
+              <th
+                scope="col"
+                class="text-xs font-semibold text-darkGray px-6 py-2 text-left"
+              >
+                EMAIL
+              </th>
+              <th
+                scope="col"
+                class="text-xs font-semibold text-darkGray px-6 py-2 text-left"
+              >
+                PHONE
+              </th>
+
+              <th
+                scope="col"
+                class="text-xs font-semibold text-darkGray px-6 py-2 text-center"
+              >
+                ACTIVE
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b">
+              <td
+                class="text-sm flex items-center gap-2 text-darkGray px-6 py-4 whitespace-nowrap"
+              >
+                <img
+                  src="/images/favicons/apple-touch-icon.png"
+                  alt=""
+                  class="w-8"
+                />
+                Umar Muqthar
+              </td>
+              <td class="text-sm text-darkGray px-6 py-4 whitespace-nowrap">
+                umar@gmail.com
+              </td>
+              <td class="text-sm text-darkGray px-6 py-4 whitespace-nowrap">
+                9747816722
+              </td>
+              <td
+                class="text-sm text-darkGray px-6 py-4 whitespace-nowrap text-center"
+              >
+                <%- include("../check") %>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <%- include("../pagination") %>
+      </div>
+    </div>
+  </div>
+</div>

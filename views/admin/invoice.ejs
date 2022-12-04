@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/admin-head") %>
+  </head>
+  <body class="bg-backgroundGray">
+    <section class="flex">
+      <%- include("./layouts/sidebar") %>
+
+      <main id="main-content" class="grow">
+        <%- include("./layouts/header") %>
+        <!-- actual content -->
+        <section class="px-10 mt-5 mb-20">
+          <h1 class="font-semibold text-3xl">Invoice</h1>
+          <div class="bg-white mt-5 p-8 text-darkGray rounded-lg border">
+            <!-- invoice shipping -->
+            <%- include("./components/invoice/invoice-shipping-details") %>
+            <!-- invoice table -->
+            <%- include("./components/invoice/invoice-table") %>
+            <!-- invoice monetory -->
+            <%- include("./components/invoice/invoice-monetory-details") %>
+          </div>
+          <!-- buttons -->
+          <div class="mt-5 flex justify-end">
+            
+            <button
+              class="bg-turquoise px-5 py-2 uppercase rounded-lg hover:bg-black hover:text-turquoise"
+            >
+              PRINT INVOICE
+            </button>
+          </div>
+        </section>
+      </main>
+    </section>
+  </body>
+</html>

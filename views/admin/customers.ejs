@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/admin-head") %>
+  </head>
+  <body class="bg-backgroundGray">
+    <section class="flex">
+      <%- include("./layouts/sidebar") %>
+
+      <main id="main-content" class="grow">
+        <%- include("./layouts/header") %>
+        <!-- actual content -->
+        <section class="px-10 mt-5">
+          <h1 class="font-semibold text-3xl">Customers</h1>
+          <!-- search -->
+          <%- include("./components/customers/customers-search") %>
+          <!-- table -->
+          <%- include("./components/customers/customers-table") %>
+        </section>
+      </main>
+    </section>
+  </body>
+</html>

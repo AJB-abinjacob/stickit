@@ -12,14 +12,7 @@
     "type": "git",
     "url": "stickit"
   },
-  "keywords": [
-    "stickit",
-    "stickers",
-    "stickitup",
-    "stickiton",
-    "laptop",
-    "stickers"
-  ],
+  "keywords": [],
   "author": "Umar Muqthar",
   "license": "ISC",
   "dependencies": {

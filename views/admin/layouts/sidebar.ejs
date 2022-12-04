@@ -1,0 +1,36 @@
+<aside id="sidebar" class="pl-5 pr-8 bg-white hidden lg:block min-h-screen">  
+  <div class="mt-3">
+    <img src="/images/logos/stickit-admin-logo.png" alt="" class="h-10" />
+  </div>
+  <ul class="mt-5">    
+    <li class="py-3 font-semibold <%= path === "/"?"text-black": "text-darkGray hover:text-black"%>">
+      <a href="/admin">Dashboard</a>
+    </li>
+    <li class="py-3 font-semibold <%= path === "/products"?"text-black": "text-darkGray hover:text-black"%>">
+      <a href="/admin/products">Products</a>
+    </li>
+    <li class="py-3 font-semibold <%= path === "/categories"?"text-black": "text-darkGray hover:text-black"%>">
+      <a href="/admin/categories">Categories</a>
+    </li>
+    <li class="py-3 font-semibold <%= path === "/orders"?"text-black": "text-darkGray hover:text-black"%>">
+      <a href="/admin/orders">Orders</a>
+    </li>
+    <li class="py-3 font-semibold <%= path === "/coupons"?"text-black": "text-darkGray hover:text-black"%>">
+      <a href="/admin/coupons">Coupons</a>
+    </li>
+    <li class="py-3 font-semibold <%= path === "/banners"?"text-black": "text-darkGray hover:text-black"%>">
+      <a href="/admin/banners">Banners</a>
+    </li>
+    <li class="py-3 font-semibold <%= path === "/customers"?"text-black": "text-darkGray hover:text-black"%>">
+      <a href="/admin/customers">Customers</a>
+    </li>
+  </ul>
+  <form action="/admin/logout" method="post">
+    <button
+      type="submit"
+      class="bg-turquoise px-5 py-2 font-semibold uppercase rounded-lg my-5 hover:bg-black hover:text-turquoise"
+    >
+      Logout
+    </button>
+  </form>
+</aside>

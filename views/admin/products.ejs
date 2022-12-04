@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/admin-head") %>
+    <script defer src="/js/toggle-modal.js"></script>
+  </head>
+  <body class="bg-backgroundGray">
+    <section class="flex">
+      <%- include("./layouts/sidebar") %>
+
+      <main id="main-content" class="grow">
+        <%- include("./layouts/header") %>
+        <!-- actual content -->
+        <section class="px-10 mt-5 mb-36">
+          <h1 class="font-semibold text-3xl">Products</h1>
+          <!-- search -->
+          <%- include("./components/products/products-search") %>
+          <!-- table -->
+          <%- include("./components/products/products-table") %>
+        </section>
+      </main>
+    </section>
+    <!-- modal  ("opneModalBtn" is in the "products-search" component)-->
+    <%- include("./components/products/add-product-modal") %>
+  </body>
+</html>
