@@ -44,27 +44,45 @@
             </tr>
           </thead>
           <tbody>
+            <% coupons.forEach((item)=>{%>
             <tr class="border-b">
               <td class="text-sm text-darkGray px-6 py-4 whitespace-nowrap">
-                ONAM23
+                <%= item.couponCode %>
               </td>
               <td class="text-sm text-darkGray px-6 py-4 whitespace-nowrap">
-                Jan 29, 2023
+                <%= item.expiresOn %>
               </td>
               <td
                 class="text-sm text-darkGray font-semibold px-6 py-4 whitespace-nowrap text-center"
               >
-                &#8377;29.00
+                &#8377;<%= item.amount %>
               </td>
               <td
                 class="text-sm text-darkGray font-semibold px-6 py-4 whitespace-nowrap text-center"
               >
-                &#8377;200.00
+                &#8377;<%= item.minPurchase %>
               </td>
               <td
                 class="text-sm text-darkGray px-6 py-4 whitespace-nowrap text-center"
               >
-                <%- include("../check") %>
+                <!-- toggle button -->
+                <form
+                  action="/admin/coupon-active"
+                  method="post"
+                  id="toggleBtnForm"
+                >
+                  <label
+                    class="inline-flex relative items-center cursor-pointer"
+                  >
+                    <input type="checkbox" value="" class="sr-only peer"
+                    <%=item.active===true?"checked":"" %>/>
+
+                    <div
+                      class="w-11 h-6 bg-lightGreen rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-darkGreen"
+                    ></div>
+                  </label>
+                </form>
+                <!--  -->
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-xl text-center">
                 <a href=""
@@ -75,6 +93,7 @@
                 </a>
               </td>
             </tr>
+            <%}) %>
           </tbody>
         </table>
         <%- include("../pagination") %>

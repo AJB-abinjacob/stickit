@@ -5,15 +5,32 @@
   <div class="bg-white p-10 h-fit rounded-lg lg:w-1/2">
     <h1 class="font-semibold text-2xl">Add Banner</h1>
 
-    <form action="/admin/coupons/add-coupon" method="post" class="w-full mt-5">
+    <form
+      id="form"
+      action="/admin/add-banner"
+      method="post"
+      enctype="multipart/form-data"
+      class="w-full mt-5"
+    >
+      <!-- images simple upload -->
+      <div class="mt-4">
+        <label for="bannerImage" class="block mb-1">Product Images</label>
+        <input
+          type="file"
+          required
+          id="bannerImage"
+          name="bannerImage"
+          class="bg-white text-darkGray border rounded-lg block w-full p-2.5"
+        />
+      </div>
       <!-- coupon code -->
       <div class="mt-4">
-        <label for="imageTitle" class="block mb-1">Image Title</label>
+        <label for="bannerTitle" class="block mb-1">Image Title</label>
         <input
           type="text"
           required
-          id="imageTitle"
-          name="imageTitle"
+          id="bannerTitle"
+          name="bannerTitle"
           placeholder="Girl holding a laptop"
           class="bg-white text-darkGray border rounded-lg block w-full p-2.5"
         />

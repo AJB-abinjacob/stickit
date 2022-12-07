@@ -38,37 +38,52 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="border-b">
+            <% banners.forEach((item,index)=>{ %>
+            <tr class="border-t">
               <td class="text-sm text-darkGray px-6 py-4 whitespace-nowrap">
-                1
+                <%= index+1 %>
               </td>
               <td class="text-sm text-darkGray px-6 py-4 whitespace-nowrap">
-                <img
-                  src="/images/banners/c-001.jpg"
-                  alt=""
-                  class="h-12 mx-auto"
-                />
+                <img src="<%= item.imgUrl %>" alt="" class="h-12 mx-auto" />
               </td>
               <td class="text-sm text-darkGray px-6 py-4">
-                The most beautiful banner on the internet.
+                <%= item.bannerTitle %>
               </td>
               <td
                 class="text-sm text-darkGray px-6 py-4 whitespace-nowrap text-center"
               >
-                <%- include("../check") %>
+                <!-- toggle button -->
+                <form
+                  action="/admin/banner-active"
+                  method="post"
+                  id="toggleBtnForm"
+                >
+                  <label
+                    class="inline-flex relative items-center cursor-pointer"
+                  >
+                    <input type="checkbox" value="" class="sr-only peer" <%=
+                    item.active===true?"checked":"" %>/>
+
+                    <div
+                      class="w-11 h-6 bg-lightGreen rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-darkGreen"
+                    ></div>
+                  </label>
+                </form>
+
+                <!--  -->
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-xl text-center">
-                <a href=""
-                  ><i class="bi bi-pencil-square text-darkGreen"></i
-                ></a>
-                <a href="">
+                <button>
+                  <i class="bi bi-pencil-square text-darkGreen"></i>
+                </button>
+                <button>
                   <i class="bi bi-trash text-darkRed ml-3"></i>
-                </a>
+                </button>
               </td>
             </tr>
+            <%}) %>
           </tbody>
         </table>
-        <%- include("../pagination") %>
       </div>
     </div>
   </div>

@@ -5,18 +5,20 @@
   <div class="bg-white p-10 h-fit rounded-lg lg:w-1/2">
     <h1 class="font-semibold text-2xl">Add Category</h1>
     <form
-      action="/admin/categories/add-category"
+      id="form"
+      action="/admin/add-category"
       method="post"
       class="w-full mt-5"
     >
       <!-- product category -->
       <div class="mt-4">
-        <label for="productCategory" class="block mb-1">Product Category</label>
+        <label for="categoryName" class="block mb-1">Category Name</label>
         <input
           type="text"
-          id="productCategory"
-          name="productCategory"
-          placeholder="Product Category"
+          required
+          id="categoryName"
+          name="categoryName"
+          placeholder="Category Name"
           class="bg-white text-darkGray border rounded-lg block w-full p-2.5"
         />
       </div>

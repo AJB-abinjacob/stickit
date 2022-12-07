@@ -3,6 +3,7 @@
   <head>
     <%- include("../partials/admin-head") %>
     <script defer src="/js/toggle-modal.js"></script>
+    <script defer src="/js/form-on-submit.js"></script>
   </head>
   <body class="bg-backgroundGray">
     <section class="flex">
@@ -22,5 +23,7 @@
     </section>
     <!-- modal  ("opneModalBtn" is in the "products-search" component)-->
     <%- include("./components/products/add-product-modal") %>
+    <!-- loading -->
+    <%- include("./components/loading") %>
   </body>
 </html>

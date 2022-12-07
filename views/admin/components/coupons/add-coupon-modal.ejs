@@ -5,7 +5,12 @@
   <div class="bg-white p-10 h-fit rounded-lg lg:w-1/2">
     <h1 class="font-semibold text-2xl">Add Coupon</h1>
 
-    <form action="/admin/coupons/add-coupon" method="post" class="w-full mt-5">
+    <form
+      id="form"
+      action="/admin/add-coupon"
+      method="post"
+      class="w-full mt-5"
+    >
       <!-- coupon code -->
       <div class="mt-4">
         <label for="couponCode" class="block mb-1">Coupon Code</label>
@@ -20,12 +25,12 @@
       </div>
       <!-- Amount -->
       <div class="mt-4">
-        <label for="couponAmount" class="block mb-1">Amount</label>
+        <label for="amount" class="block mb-1">Amount</label>
         <input
           type="number"
-          id="couponAmount"
+          id="amount"
           required
-          name="couponAmount"
+          name="amount"
           placeholder="Amount"
           class="bg-white text-darkGray border rounded-lg block w-full p-2.5"
         />
@@ -44,13 +49,13 @@
       </div>
       <!-- Minimum purchase -->
       <div class="mt-4">
-        <label for="expiryDate" class="block mb-1">Expiry Date</label>
+        <label for="expiresOn" class="block mb-1">Expiry Date</label>
         <input
           type="date"
           min=""
           required
-          id="expiryDate"
-          name="expiryDate"
+          id="expiresOn"
+          name="expiresOn"
           class="bg-white text-darkGray border rounded-lg block w-full p-2.5"
         />
       </div>

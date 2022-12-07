@@ -2,8 +2,6 @@ const openModalbtn = document.getElementById("openModalbtn");
 const cancelModalBtn = document.getElementById("cancelModalBtn");
 const modal = document.getElementById("modal");
 
-console.log(modal);
-
 const openModalHandler = () => {
   if (modal.classList.contains("hidden")) {
     modal.classList.replace("hidden", "flex");

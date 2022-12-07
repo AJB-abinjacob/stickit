@@ -7,104 +7,117 @@
             <tr>
               <th
                 scope="col"
-                class="text-xs font-semibold text-darkGray px-6 py-2 text-left"
+                class="text-xs font-semibold text-darkGray px-6 py-2 text-left "
               >
                 PRODUCT
               </th>
               <th
                 scope="col"
-                class="text-xs font-semibold text-darkGray px-6 py-2 text-left"
+                class="text-xs font-semibold text-darkGray px-6 py-2 text-left "
               >
                 CATEGORY
               </th>
               <th
                 scope="col"
-                class="text-xs font-semibold text-darkGray px-6 py-2 text-left"
+                class="text-xs font-semibold text-darkGray px-6 py-2 text-left "
               >
-                PRICE
+                PRODUCT PRICE
               </th>
               <th
                 scope="col"
-                class="text-xs font-semibold text-darkGray px-6 py-2 text-left"
+                class="text-xs font-semibold text-darkGray px-6 py-2 text-left "
               >
-                STOCK
+                SALE PRICE
               </th>
               <th
                 scope="col"
-                class="text-xs font-semibold text-darkGray px-6 py-2 text-center"
+                class="text-xs font-semibold text-darkGray px-6 py-2 text-center "
               >
                 STATUS
               </th>
               <th
                 scope="col"
-                class="text-xs font-semibold text-darkGray px-6 py-2 text-center"
+                class="text-xs font-semibold text-darkGray px-6 py-2 text-center "
               >
-                DISCOUNT
+                STOCK
               </th>
               <th
                 scope="col"
-                class="text-xs font-semibold text-darkGray px-6 py-2 text-center"
+                class="text-xs font-semibold text-darkGray px-6 py-2 text-center "
               >
                 ACTIVE
               </th>
               <th
                 scope="col"
-                class="text-xs font-semibold text-darkGray px-6 py-2 text-center"
+                class="text-xs font-semibold text-darkGray px-6 py-2 text-center "
               >
                 ACTIONS
               </th>
             </tr>
           </thead>
           <tbody>
+            <% products.forEach(item => { %>
             <tr class="border-b">
               <td
-                class="text-sm flex items-center gap-2 text-darkGray px-6 py-4 whitespace-nowrap"
+                class="text-sm capitalize flex items-center gap-2 text-darkGray px-6 py-4 whitespace-nowrap"
               >
                 <img
-                  src="/images/favicons/apple-touch-icon.png"
+                  src="<%= item.imgUrls[3] %>"
                   alt=""
-                  class="w-8"
+                  class="w-8 rounded-full"
                 />
-                Stay Focussed Sticker
-              </td>
-              <td class="text-sm text-darkGray px-6 py-4 whitespace-nowrap">
-                Motivational
+                <%= item.productTitle %>
               </td>
               <td
-                class="text-sm text-darkGray font-semibold px-6 py-4 whitespace-nowrap"
+                class="text-sm capitalize text-darkGray px-6 py-4 whitespace-nowrap"
               >
-                &#8377;29.00
+                <%= item.categoryName[0].categoryName %>
               </td>
               <td
-                class="text-sm text-darkGray font-semibold px-6 py-4 whitespace-nowrap"
+                class="text-sm line-through text-darkGray px-6 py-4 whitespace-nowrap"
               >
-                100
+                &#8377;<%= item.productPrice %>
               </td>
-              <td class="text-xs px-6 py-4 whitespace-nowrap text-center">
-                <span
-                  class="text-xs text-darkRed bg-lightRed py-2 px-3 rounded-lg"
-                  >OUT OF STOCK</span
+              <td
+                class="text-sm  text-darkGreen font-semibold px-6 py-4 whitespace-nowrap"
+              >
+              &#8377;<%= item.salePrice %>
+              </td>
+              <td class="text-xs px-6 py-4  whitespace-nowrap text-center">
+                <span class="text-xs uppercase py-2 px-3 rounded-lg <%= item.stock>0?"text-darkGreen bg-lightGreen":"text-darkRed bg-lightRed" %>"
+                  ><%= item.stock>0?"IN STOCK":"OUT OF STOCK"%></span
                 >
               </td>
               <td
                 class="text-sm font-semibold text-darkGray px-6 py-4 whitespace-nowrap text-center"
               >
-                20%
+              <%= item.stock  %> 
               </td>
               <td
                 class="text-sm text-darkGray px-6 py-4 whitespace-nowrap text-center"
               >
-                <%- include("../check") %>
+                <!-- toggle button -->
+                <form action="/admin/category-active" method="post" id="toggleBtnForm">
+                  <label class="inline-flex relative items-center cursor-pointer">
+                    <input type="checkbox" value="" class="sr-only peer"
+                    <%=item.active===true?"checked":"" %> />
+                    <div
+                      class="w-11 h-6 bg-lightGreen rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-darkGreen"
+                    ></div>
+                  </label>
+                </form>                
+                <!--  -->
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-xl text-center">
-                <a href=""
-                  ><i class="bi bi-pencil-square text-darkGreen"></i
-                ></a>
-                <a href="">
+                <button>
+                  <i class="bi bi-pencil-square text-darkGreen"></i
+                ></button>
+                <button>
                   <i class="bi bi-trash text-darkRed ml-3"></i>
-                </a>
+                </button>
               </td>
             </tr>
+            <% }) %>
           </tbody>
         </table>
         <%- include("../pagination") %>
