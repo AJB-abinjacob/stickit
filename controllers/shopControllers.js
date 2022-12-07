@@ -1,5 +1,5 @@
 exports.getDashboard = (req, res) => {
-  res.render("shop/home");
+  res.render("shop/dashboard");
 };
 exports.getLogin = (req, res) => {
   res.render("shop/logins/login");
