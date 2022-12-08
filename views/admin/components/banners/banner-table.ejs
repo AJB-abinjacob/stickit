@@ -46,7 +46,7 @@
               <td class="text-sm text-darkGray px-6 py-4 whitespace-nowrap">
                 <img src="<%= item.imgUrl %>" alt="" class="h-12 mx-auto" />
               </td>
-              <td class="text-sm text-darkGray px-6 py-4">
+              <td class="text-sm text-darkGray capitalize px-6 py-4">
                 <%= item.bannerTitle %>
               </td>
               <td
@@ -73,10 +73,10 @@
                 <!--  -->
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-xl text-center">
-                <button>
+                <button class="editBtn">
                   <i class="bi bi-pencil-square text-darkGreen"></i>
                 </button>
-                <button>
+                <button class="dltBtn">
                   <i class="bi bi-trash text-darkRed ml-3"></i>
                 </button>
               </td>
@@ -88,3 +88,101 @@
     </div>
   </div>
 </div>
+
+<!-- edit modal -->
+<% banners.forEach((item,index)=>{%>
+<div
+  class="editModal hidden w-full bg-black bg-opacity-30 absolute inset-0 justify-center items-center overflow-y-auto"
+>
+  <div
+    class="bg-white text-left p-10 h-fit rounded-lg lg:w-1/2 animate-slide-down"
+  >
+    <h1 class="font-semibold text-2xl">Edit Banner</h1>
+    <form
+      action="/admin/edit-banner"
+      method="post"
+      enctype="multipart/form-data"
+      class="w-full mt-5 form"
+    >
+      <!-- images simple upload -->
+      <div class="mt-4">
+        <label for="bannerImage" class="block mb-1">Product Images</label>
+        <input
+          type="file"
+          id="bannerImage"
+          name="bannerImage"
+          class="bg-white text-darkGray border rounded-lg block w-full p-2.5"
+        />
+      </div>
+      <!-- coupon code -->
+      <div class="mt-4">
+        <label for="bannerTitle" class="block mb-1">Image Title</label>
+        <input
+          type="text"
+          required
+          value="<%= item.bannerTitle %>"
+          id="bannerTitle"
+          name="bannerTitle"
+          class="bg-white border rounded-lg block w-full p-2.5"
+        />
+      </div>
+      <input type="hidden" name="id" value="<%= item._id %>" />
+      <!-- BUTTONS -->
+      <div class="mt-5 flex justify-end gap-3">
+        <button
+          type="submit"
+          class="bg-turquoise px-5 py-2 font-semibold uppercase rounded-lg hover:bg-black hover:text-turquoise"
+        >
+          UPDATE
+        </button>
+        <button
+          type="reset"
+          class="cancelModalBtn text-darkGray px-5 py-2 font-semibold uppercase rounded-lg hover:underline"
+        >
+          CANCEL
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<% }) %>
+
+<!-- delete modal -->
+<% banners.forEach((item,index)=>{%>
+<div
+  class="dltModal hidden w-full bg-black bg-opacity-30 absolute inset-0 justify-center items-center overflow-y-auto"
+>
+  <div
+    class="bg-white text-left p-6 h-fit rounded-lg lg:w-2/5 animate-slide-down"
+  >
+    <h1 class="font-semibold text-2xl">
+      <i class="bi bi-exclamation-triangle mr-2 text-red-700"></i> Delete
+      Banner?
+    </h1>
+    <form action="/admin/delete-banner" method="post" class="form w-full mt-5">
+      <p class="border-y py-5">
+        Are you sure you want to delete the banner "<span
+          class="font-semibold capitalize"
+          ><%= item.bannerTitle %></span
+        >"?
+      </p>
+      <!-- _id -->
+      <input type="hidden" name="id" value="<%= item._id %>" />
+      <div class="mt-5 flex justify-end gap-3">
+        <button
+          type="button"
+          class="cancelModalBtn text-darkGray px-5 py-2 font-semibold uppercase rounded-lg hover:underline"
+        >
+          CANCEL
+        </button>
+        <button
+          type="submit"
+          class="bg-red-700 text-white px-5 py-2 font-semibold uppercase rounded-lg hover:bg-red-600"
+        >
+          DELETE
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<% }) %>

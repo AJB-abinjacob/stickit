@@ -2,15 +2,14 @@
   id="modal"
   class="hidden w-full bg-black bg-opacity-30 absolute inset-0 justify-center items-center overflow-y-auto"
 >
-  <div class="bg-white p-10 h-fit rounded-lg lg:w-1/2">
+  <div class="bg-white p-10 h-fit rounded-lg lg:w-1/2 animate-slide-down">
     <h1 class="font-semibold text-2xl">Add Banner</h1>
 
     <form
-      id="form"
       action="/admin/add-banner"
       method="post"
       enctype="multipart/form-data"
-      class="w-full mt-5"
+      class="w-full mt-5 form"
     >
       <!-- images simple upload -->
       <div class="mt-4">
@@ -46,7 +45,7 @@
         <button
           id="cancelModalBtn"
           type="reset"
-          class="text-darkRed px-5 py-2 font-semibold uppercase rounded-lg hover:underline"
+          class="text-darkGray px-5 py-2 font-semibold uppercase rounded-lg hover:underline"
         >
           CANCEL
         </button>

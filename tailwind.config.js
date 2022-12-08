@@ -25,6 +25,15 @@ module.exports = {
         lightYellow: "#fdf6b2",
         adminBlue: "#93C5FD",
       },
+      animation: {
+        "slide-down": "slide-down 0.3s ease-in-out 1",
+      },
+      keyframes: {
+        "slide-down": {
+          "0%": { transform: "translateY(-2rem)", opacity: 0 },
+          "100%": { transform: "translateY(0)", opacity: 1 },
+        },
+      },
     },
   },
   plugins: [],

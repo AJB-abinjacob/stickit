@@ -6,11 +6,10 @@
     <h1 class="font-semibold text-2xl">Add Product</h1>
 
     <form
-      id="form"
       action="/admin/add-product"
       method="post"
       enctype="multipart/form-data"
-      class="w-full mt-5"
+      class="w-full mt-5 form"
     >
       <!-- images simple upload -->
       <div class="mt-4">
@@ -91,13 +90,12 @@
       </div>
       <!-- Sale price -->
       <div class="mt-4">
-        <label for="salePrice" class="block mb-1">Sale Price</label>
+        <label for="discount" class="block mb-1">Discount</label>
         <input
           type="number"
-          required
-          id="salePrice"
-          name="salePrice"
-          placeholder="Sale price"
+          id="discount"
+          name="discount"
+          placeholder="Discount"
           class="bg-white text-darkGray border rounded-lg block w-full p-2.5"
         />
       </div>
@@ -124,7 +122,7 @@
         <button
           id="cancelModalBtn"
           type="reset"
-          class="text-darkRed px-5 py-2 font-semibold uppercase rounded-lg hover:underline"
+          class="text-darkGray px-5 py-2 font-semibold uppercase rounded-lg hover:underline"
         >
           CANCEL
         </button>

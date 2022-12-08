@@ -85,12 +85,12 @@
                 <!--  -->
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-xl text-center">
-                <a href=""
-                  ><i class="bi bi-pencil-square text-darkGreen"></i
-                ></a>
-                <a href="">
+                <button class="editBtn">
+                  <i class="bi bi-pencil-square text-darkGreen"></i>
+                </button>
+                <button class="dltBtn">
                   <i class="bi bi-trash text-darkRed ml-3"></i>
-                </a>
+                </button>
               </td>
             </tr>
             <%}) %>
@@ -101,3 +101,125 @@
     </div>
   </div>
 </div>
+
+<!-- edit modal -->
+<% coupons.forEach((item,index)=>{%>
+<div
+  class="editModal hidden w-full bg-black bg-opacity-30 absolute inset-0 justify-center items-center overflow-y-auto"
+>
+  <div
+    class="bg-white text-left p-10 h-fit rounded-lg lg:w-1/2 animate-slide-down"
+  >
+    <h1 class="font-semibold text-2xl">Edit Coupon</h1>
+    <form action="/admin/edit-coupon" method="post" class="w-full mt-5 form">
+      <!-- coupon code -->
+      <div class="mt-4">
+        <label for="couponCode" class="block mb-1">Coupon Code</label>
+        <input
+          type="text"
+          required
+          value="<%= item.couponCode %>"
+          id="couponCode"
+          name="couponCode"
+          placeholder="WELCOME60"
+          class="bg-white border rounded-lg block w-full p-2.5"
+        />
+      </div>
+      <!-- Amount -->
+      <div class="mt-4">
+        <label for="amount" class="block mb-1">Amount</label>
+        <input
+          type="number"
+          id="amount"
+          required
+          value="<%= item.amount %>"
+          name="amount"
+          placeholder="Amount"
+          class="bg-white border rounded-lg block w-full p-2.5"
+        />
+      </div>
+      <!-- Minimum purchase -->
+      <div class="mt-4">
+        <label for="minPurchase" class="block mb-1">Minimum Purchase</label>
+        <input
+          type="number"
+          required
+          value="<%= item.minPurchase %>"
+          id="minPurchase"
+          name="minPurchase"
+          placeholder="Minimum purchase"
+          class="bg-white border rounded-lg block w-full p-2.5"
+        />
+      </div>
+      <!-- Minimum purchase -->
+      <div class="mt-4">
+        <label for="expiresOn" class="block mb-1">Expiry Date</label>
+        <input
+          type="date"
+          min=""
+          required
+          value="<%= item.expiryDate %>"
+          id="expiresOn"
+          name="expiresOn"
+          class="bg-white border rounded-lg block w-full p-2.5"
+        />
+      </div>
+      <input type="hidden" name="id" value="<%= item._id %>" />
+      <!-- BUTTONS -->
+      <div class="mt-5 flex justify-end gap-3">
+        <button
+          type="submit"
+          class="bg-turquoise px-5 py-2 font-semibold uppercase rounded-lg hover:bg-black hover:text-turquoise"
+        >
+          update
+        </button>
+        <button
+          type="reset"
+          class="cancelModalBtn text-darkGray px-5 py-2 font-semibold uppercase rounded-lg hover:underline"
+        >
+          CANCEL
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<% }) %>
+
+<!-- delete modal -->
+<% coupons.forEach((item,index)=>{%>
+<div
+  class="dltModal hidden w-full bg-black bg-opacity-30 absolute inset-0 justify-center items-center overflow-y-auto"
+>
+  <div
+    class="bg-white text-left p-6 h-fit rounded-lg lg:w-2/5 animate-slide-down"
+  >
+    <h1 class="font-semibold text-2xl">
+      <i class="bi bi-exclamation-triangle mr-2 text-red-700"></i> Delete
+      Coupon?
+    </h1>
+    <form action="/admin/delete-coupon" method="post" class="form w-full mt-5">
+      <p class="border-y py-5">
+        Are you sure you want to delete the coupon "<span
+          class="font-semibold uppercase"
+          ><%= item.couponCode %> </span
+        >"?
+      </p>
+      <!-- _id -->
+      <input type="hidden" name="id" value="<%= item._id %>" />
+      <div class="mt-5 flex justify-end gap-3">
+        <button
+          class="cancelModalBtn text-darkGray px-5 py-2 font-semibold uppercase rounded-lg hover:underline"
+        >
+          CANCEL
+        </button>
+        <button
+          type="submit"
+          class="bg-red-700 text-white px-5 py-2 font-semibold uppercase rounded-lg hover:bg-red-600"
+        >
+          DELETE
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<% }) %>

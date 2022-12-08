@@ -67,14 +67,15 @@
                 <!--  -->
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-xl text-center">
-                <a href=""
-                  ><i class="bi bi-pencil-square text-darkGreen"></i
-                ></a>
-                <a href="">
+                <button class="editBtn">
+                  <i class="bi bi-pencil-square text-darkGreen"></i>
+                </button>
+                <button class="dltBtn">
                   <i class="bi bi-trash text-darkRed ml-3"></i>
-                </a>
+                </button>
               </td>
             </tr>
+
             <% }) %>
           </tbody>
         </table>
@@ -82,3 +83,86 @@
     </div>
   </div>
 </div>
+
+<!-- edit modal -->
+<% categories.forEach((item,index)=>{%>
+<div
+  class="editModal hidden w-full bg-black bg-opacity-30 absolute inset-0 justify-center items-center overflow-y-auto"
+>
+  <div class="bg-white text-left p-10 h-fit rounded-lg lg:w-1/2 animate-slide-down">
+    <h1 class="font-semibold text-2xl">Edit Category</h1>
+    <form action="/admin/edit-category" method="post" class="form w-full mt-5">
+      <!-- product category -->
+      <div class="mt-4">
+        <label for="categoryName" class="block mb-1">Category Name</label>
+        <input
+          type="text"
+          required
+          value="<%= item.categoryName %>"
+          id="categoryName"
+          name="categoryName"
+          placeholder="Category Name"
+          class="bg-white capitalize border rounded-lg block w-full p-2.5"
+        />
+      </div>
+      <input type="hidden" name="id" value="<%= item._id %>" />
+      <div class="mt-5 flex justify-end gap-3">
+        <button
+          type="submit"
+          class="bg-turquoise px-5 py-2 font-semibold uppercase rounded-lg hover:bg-black hover:text-turquoise"
+        >
+          UPDATE
+        </button>
+        <button
+          type="reset"
+          class="cancelModalBtn text-darkGray px-5 py-2 font-semibold uppercase rounded-lg hover:underline"
+        >
+          CANCEL
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<% }) %>
+
+<!-- delete modal -->
+<% categories.forEach((item,index)=>{%>
+<div
+  class="dltModal hidden w-full bg-black bg-opacity-30 absolute inset-0 justify-center items-center overflow-y-auto"
+>
+  <div class="bg-white text-left p-6 h-fit rounded-lg lg:w-2/5 animate-slide-down">
+    <h1 class="font-semibold text-2xl">
+      <i class="bi bi-exclamation-triangle mr-2 text-red-700"></i> Delete
+      Category?
+    </h1>
+    <form
+      action="/admin/delete-category"
+      method="post"
+      class="form w-full mt-5"
+    >
+      <p class="border-y py-5">
+        Are you sure you want to delete the category "<span
+          class="font-semibold capitalize"
+          ><%= item.categoryName %> </span
+        >"?
+      </p>
+      <!-- _id -->
+      <input type="hidden" name="id" value="<%= item._id %>" />
+      <div class="mt-5 flex justify-end gap-3">
+        <button
+          type="reset"
+          class="cancelModalBtn text-darkGray px-5 py-2 font-semibold uppercase rounded-lg hover:underline"
+        >
+          CANCEL
+        </button>
+        <button
+          type="submit"
+          class="bg-red-700 text-white px-5 py-2 font-semibold uppercase rounded-lg hover:bg-red-600"
+        >
+          DELETE
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<% }) %>

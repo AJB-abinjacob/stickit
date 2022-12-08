@@ -1,8 +1,10 @@
-const form = document.querySelector("#form");
+const forms = document.querySelectorAll(".form");
 const loading = document.querySelector("#loading");
 
 const formSubmitHandler = (e) => {
   loading.classList.replace("hidden", "flex");
 };
 
-form.addEventListener("submit", formSubmitHandler);
+forms.forEach((form) => {
+  form.addEventListener("submit", formSubmitHandler);
+});

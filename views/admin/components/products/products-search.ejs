@@ -18,13 +18,14 @@
   <form action="">
     <select
       id="countries"
-      class="bg-white border text-gray-900 text-sm rounded-lg p-2.5"
+      class="bg-white capitalize border text-gray-900 text-sm rounded-lg p-2.5"
     >
       <option selected hidden>Category</option>
-      <option value="US">United States</option>
-      <option value="CA">Canada</option>
-      <option value="FR">France</option>
-      <option value="DE">Germany</option>
+      <% categories.forEach(item => {%> <% if(item.active===true){ %>
+      <option class="capitalize text-darkGray" value="<%= item._id %>">
+        <%= item.categoryName %>
+      </option>
+      <% } %> <%}); %>
     </select>
   </form>
   <button

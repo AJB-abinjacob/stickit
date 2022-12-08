@@ -1,3 +1,5 @@
+const { ObjectId } = require("mongodb");
+
 const cloudinary = require("../utils/cloudinary");
 
 const Product = require("../models/productModel");
@@ -5,14 +7,14 @@ const Category = require("../models/categoryModel");
 const Coupon = require("../models/couponModel");
 const Banner = require("../models/bannerModel");
 
-exports.getLogin = (req, res) => {
+exports.getLogin = async (req, res) => {
   res.render("admin/login");
 };
-exports.postLogin = (req, res) => {
+exports.postLogin = async (req, res) => {
   res.redirect("/admin");
 };
 
-exports.postLogout = (req, res) => {
+exports.postLogout = async (req, res) => {
   res.redirect("/admin/login");
 };
 
@@ -37,7 +39,7 @@ exports.getProducts = (req, res) => {
 };
 
 exports.postAddProduct = (req, res) => {
-  const { productTitle, productCategory, productPrice, salePrice, stock } =
+  const { productTitle, productCategory, productPrice, discount, stock } =
     req.body;
   const imgPromises = req.files.map((image) =>
     cloudinary.uploader.upload(image.path, {
@@ -54,7 +56,7 @@ exports.postAddProduct = (req, res) => {
         productTitle,
         productCategory,
         productPrice,
-        salePrice,
+        discount,
         stock,
         imgUrls
       );
@@ -72,11 +74,40 @@ exports.postAddProduct = (req, res) => {
       console.log(err);
     });
 };
+exports.postEditProduct = async (req, res) => {
+  const { id } = req.body;
+  const updatedProduct = {
+    productTitle: req.body.productTitle,
+    category: ObjectId(req.body.productCategory),
+    productPrice: req.body.productPrice,
+    discount: req.body.discount,
+    stock: req.body.stock,
+    updatedOn: new Date(),
+  };
+  if (req.files) {
+    const imgPromises = req.files.map((image) =>
+      cloudinary.uploader.upload(image.path, {
+        folder: "product_images",
+        unique_filename: true,
+      })
+    );
+    const results = await Promise.allSettled(imgPromises);
+    const imgUrls = results.map((result) => result.value.secure_url);
+    updatedProduct.imgUrls = imgUrls;
+  }
+  await Product.update(id, updatedProduct);
+  res.redirect("/admin/products");
+};
+exports.postDeleteProduct = async (req, res) => {
+  const { id } = req.body;
+  console.log(id);
+  await Product.softDelete(id);
+  res.redirect("/admin/products");
+};
 
-exports.getCategories = (req, res) => {
-  Category.fetchAll().then((categories) => {
-    res.render("admin/categories", { path: "/categories", categories });
-  });
+exports.getCategories = async (req, res) => {
+  const categories = await Category.fetchAll();
+  res.render("admin/categories", { path: "/categories", categories });
 };
 exports.postAddCategory = (req, res) => {
   const categoryName = req.body.categoryName.toLowerCase();
@@ -91,11 +122,25 @@ exports.postAddCategory = (req, res) => {
       console.log(err);
     });
 };
+exports.postEditCategory = async (req, res) => {
+  const { id } = req.body;
+  const updatedCategory = {
+    categoryName: req.body.categoryName,
+    updatedOn: new Date(),
+  };
+  await Category.update(id, updatedCategory);
+  res.redirect("/admin/categories");
+};
+exports.postDeleteCategory = async (req, res) => {
+  const { id } = req.body;
+  console.log(id);
+  await Category.softDelete(id);
+  res.redirect("/admin/categories");
+};
 
 exports.getOrders = (req, res) => {
   res.render("admin/orders", { path: "/orders" });
 };
-
 exports.getInvoice = (req, res) => {
   const orderId = req.params.orderId;
   res.render("admin/invoice", { path: "/orders", orderId: orderId });
@@ -104,7 +149,6 @@ exports.getInvoice = (req, res) => {
 exports.getCoupons = (req, res) => {
   Coupon.fetchAll()
     .then((coupons) => {
-      console.log(coupons);
       const changedCoupons = coupons.map((coupon) => {
         const dateString = coupon.expiresOn;
         const options = { year: "numeric", month: "short", day: "numeric" };
@@ -112,9 +156,9 @@ exports.getCoupons = (req, res) => {
           undefined,
           options
         );
+        coupon.expiryDate = new Date(dateString).toISOString().substring(0, 10);
         return coupon;
       });
-
       res.render("admin/coupons", {
         path: "/coupons",
         coupons: changedCoupons,
@@ -146,20 +190,42 @@ exports.postAddCoupon = (req, res) => {
       console.log(err);
     });
 };
+exports.postEditCoupon = async (req, res) => {
+  try {
+    const { id } = req.body;
+    const updatedCoupon = {
+      couponCode: req.body.couponCode,
+      amount: req.body.amount,
+      minPurchase: req.body.minPurchase,
+      expiresOn: new Date(req.body.expiresOn),
+      updatedOn: new Date(),
+    };
+    await Coupon.update(id, updatedCoupon);
+    res.redirect("/admin/coupons");
+  } catch (error) {
+    console.log(error);
+  }
+};
+exports.postDeleteCoupon = async (req, res) => {
+  try {
+    const { id } = req.body;
+    await Coupon.softDelete(id);
+    res.redirect("/admin/coupons");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-exports.getBanners = (req, res) => {
-  Banner.fetchAll()
-    .then((banners) => {
-      console.log(banners);
-      res.render("admin/banners", { path: "/banners", banners });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+exports.getBanners = async (req, res) => {
+  try {
+    const banners = await Banner.fetchAll();
+    res.render("admin/banners", { path: "/banners", banners });
+  } catch (error) {
+    console.log(error);
+  }
 };
 exports.postAddBanner = (req, res) => {
   const { bannerTitle } = req.body;
-
   cloudinary.uploader
     .upload(req.file.path, {
       folder: "banner_images",
@@ -180,6 +246,36 @@ exports.postAddBanner = (req, res) => {
     .catch((err) => {
       console.log(err);
     });
+};
+exports.postEditBanner = async (req, res) => {
+  try {
+    console.log(req.file);
+    const { id } = req.body;
+    const updatedBanner = {
+      bannerTitle: req.body.bannerTitle,
+      updatedOn: new Date(),
+    };
+    if (req.file) {
+      const file = await cloudinary.uploader.upload(req.file.path, {
+        folder: "banner_images",
+        unique_filename: true,
+      });
+      updatedBanner.imgUrl = file.secure_url;
+    }
+    await Banner.update(id, updatedBanner);
+    res.redirect("/admin/banners");
+  } catch (error) {
+    console.log(error);
+  }
+};
+exports.postDeleteBanner = async (req, res) => {
+  try {
+    const { id } = req.body;
+    await Banner.softDelete(id);
+    res.redirect("/admin/banners");
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.getCustomers = (req, res) => {

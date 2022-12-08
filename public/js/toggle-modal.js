@@ -1,5 +1,6 @@
 const openModalbtn = document.getElementById("openModalbtn");
 const cancelModalBtn = document.getElementById("cancelModalBtn");
+
 const modal = document.getElementById("modal");
 
 const openModalHandler = () => {
