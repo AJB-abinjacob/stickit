@@ -25,13 +25,20 @@ class Product {
         console.log(err);
       });
   }
+  static count() {
+    const db = getDb();
+    return db.collection("products").countDocuments({ deleted: { $ne: true } });
+  }
 
-  static fetchAll() {
+  static fetchAll(skip, limit) {
     const db = getDb();
     return db
       .collection("products")
       .aggregate([
         { $match: { deleted: { $ne: true } } },
+        { $sort: { createdOn: -1 } },
+        { $skip: skip || 0 },
+        { $limit: limit || null },
         {
           $lookup: {
             from: "categories",
@@ -41,23 +48,12 @@ class Product {
           },
         },
       ])
-      .sort({ createdOn: -1 })
-      .toArray()
-      .then((products) => products)
-      .catch((err) => {
-        console.log(err);
-      });
+      .toArray();
   }
 
   static fetchById(id) {
     const db = getDb();
-    return db
-      .collection("products")
-      .findOne({ _id: ObjectId(id) })
-      .then((product) => product)
-      .catch((err) => {
-        console.log(err);
-      });
+    return db.collection("products").findOne({ _id: ObjectId(id) });
   }
 
   static update(id, data) {

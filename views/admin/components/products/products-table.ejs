@@ -62,7 +62,7 @@
                 class="text-sm capitalize flex items-center gap-2 text-darkGray px-6 py-4 whitespace-nowrap"
               >
                 <img
-                  src="<%= item.imgUrls[3] %>"
+                  src="<%= item.imgUrls[0] %>"
                   alt=""
                   class="w-8 rounded-full"
                 />
@@ -120,7 +120,7 @@
             <% }) %>
           </tbody>
         </table>
-        <%- include("../pagination") %>
+        <%- include("./product-pagination") %>        
       </div>
     </div>
   </div>

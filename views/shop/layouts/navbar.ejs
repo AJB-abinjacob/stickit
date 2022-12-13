@@ -1,0 +1,132 @@
+<nav
+  class="flex justify-between items-center px-2 lg:px-5 bg-veryDarkGray sticky top-0 right-0 left-0 z-10"
+>
+  <div class="relative">
+    <a href="/"
+      ><img class="h-14" src="/images/logos/stickit-logo.png" alt=""
+    /></a>
+  </div>
+
+  <ul class="hidden lg:flex items-center justify-around gap-8 text-turquoise">
+    <li id="categoryListBtn" class="py-1 hover:text-white cursor-pointer">
+      Shop by category
+    </li>
+    <li class="py-1 hover:text-white">
+      <a href="/custom-design">Custom design</a>
+    </li>
+    <li class="py-1 hover:text-white">
+      <a href="/contact">Contact</a>
+    </li>
+  </ul>
+
+  <div class="flex items-center gap-4">
+    <div class="flex items-center gap-5">
+      <button id="searchBtn">
+        <i class="bi bi-search text-xl text-white hover:text-turquoise"></i>
+      </button>
+      <div class="hidden lg:flex gap-5 items-center">
+        <a href="/wishlist"
+          ><i class="bi bi-heart text-xl text-white hover:text-turquoise"></i
+        ></a>
+        <a href="/cart"
+          ><i class="bi bi-cart3 text-xl text-white hover:text-turquoise"></i
+        ></a>
+        <a href="/login">
+          <i
+            class="bi bi-person-circle text-3xl text-white hover:text-turquoise"
+          ></i>
+        </a>
+        <a href="/account"
+          ><img
+            class="h-8"
+            src="/images/favicons/android-chrome-192x192.png"
+            alt=""
+        /></a>
+      </div>
+    </div>
+    <button id="menuBtn" class="lg:hidden">
+      <i class="bi bi-list text-4xl text-white"></i>
+    </button>
+  </div>
+</nav>
+
+<!-- mobile menu -->
+<div
+  id="mobileMenu"
+  class="hidden fixed top-0 left-0 right-0 z-10 bg-veryDarkGray px-5 pt-3 animate-slide-down text-center mt-14"
+>
+  <ul class="border-b border-lightGray pb-2 text-turquoise">
+    <li id="mobileCategoryListBtn" class="py-1 hover:text-white cursor-pointer">
+      Shop by category
+      <ul
+        id="mobileCategoryList"
+        class="hidden text-lightGray ml-5 animate-slide-down cursor-pointer"
+      >
+        <li class="hover:underline"><a href="/category/hello">Hello</a></li>
+        <li class="hover:underline">Hello</li>
+        <li class="hover:underline">Hello</li>
+      </ul>
+    </li>
+    <li class="py-1 hover:text-white">
+      <a href="/custom-design">Custom design</a>
+    </li>
+    <li class="py-1 hover:text-white">
+      <a href="/contact">Contact</a>
+    </li>
+  </ul>
+  <div class="flex items-center justify-center gap-5 py-5">
+    <a href="/wishlist"
+      ><i class="bi bi-heart text-xl text-white hover:text-turquoise"></i
+    ></a>
+    <!-- <a href="/login">
+          <i
+            class="bi bi-person-circle text-3xl text-white hover:text-turquoise"
+          ></i>
+        </a> -->
+    <a href="/account"
+      ><img
+        class="h-8"
+        src="/images/favicons/android-chrome-192x192.png"
+        alt=""
+    /></a>
+    <a href="/cart"
+      ><i class="bi bi-cart3 text-xl text-white hover:text-turquoise"></i
+    ></a>
+  </div>
+</div>
+
+<ul
+  id="categoryList"
+  class="hidden z-10 bg-veryDarkGray text-white animate-slide-down w-fit px-10 py-3 flex-wrap gap-5 max-w-sm absolute top-14 right-1/3"
+>
+  <li class="hover:underline"><a href="/category/hello">Hello</a></li>
+  <li class="hover:underline">Hello</li>
+  <li class="hover:underline">Hello</li>
+  <li class="hover:underline">Hello</li>
+  <li class="hover:underline">Hello</li>
+  <li class="hover:underline">Hello</li>
+  <li class="hover:underline">Hello</li>
+  <li class="hover:underline">Hello</li>
+</ul>
+
+<!-- search -->
+<div
+  id="searchModal"
+  class="hidden bg-black fixed bg-opacity-20 inset-0 z-10 justify-center"
+>
+  <div class="mt-16 animate-slide-down h-fit relative">
+    <button id="searchModalCancelBtn" class="absolute top-3 right-3">
+      <i class="bi bi-x-lg"></i>
+    </button>
+    <form action="/search" method="get">
+      <input
+        type="search"
+        name="search"
+        autofocus
+        required
+        placeholder="Search stickers"
+        class="p-3 rounded-lg bg-white focus:outline-none block mx-auto w-full md:w-96"
+      />
+    </form>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/user-head") %>
+    <script
+      defer
+      src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
+    ></script>
+  </head>
+  <body>
+    <%- include("./layouts/navbar") %>
+    <main class="flex justify-center items-center">
+      <lottie-player
+        src="https://assets5.lottiefiles.com/packages/lf20_mt6bn9ht.json"
+        background="transparent"
+        speed="1"
+        style="height: 33rem"
+        autoplay
+      ></lottie-player>
+    </main>
+
+    <!-- pre-footer -->
+    <%- include("./layouts/pre-footer") %>
+    <!-- footer -->
+    <%- include("./layouts/footer") %>
+  </body>
+</html>

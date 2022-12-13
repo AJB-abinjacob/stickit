@@ -1,0 +1,134 @@
+<section
+  class="flex flex-col gap-5 lg:gap-20 lg:flex-row mt-10 lg:mx-10 mx-5 lg:ml-20"
+>
+  <!-- images -->
+  <div>
+    <div class="flex items-start gap-8">
+      <div class="hidden lg:flex flex-col gap-5">
+        <img
+          class="rounded-lg w-14"
+          src="https://res.cloudinary.com/dyc3koszi/image/upload/v1670492181/product_images/ohrvvfg3riqxajvzsq3o.webp"
+          alt=""
+        />
+
+        <img
+          class="rounded-lg w-14"
+          src="https://res.cloudinary.com/dyc3koszi/image/upload/v1670492181/product_images/hgdasvicvtjywp7teqkg.jpg"
+          alt=""
+        />
+        <img
+          class="rounded-lg w-14"
+          src="https://res.cloudinary.com/dyc3koszi/image/upload/v1670492179/product_images/yw69f7jrromlgefx9zqm.jpg"
+          alt=""
+        />
+
+        <img
+          class="rounded-lg w-14"
+          src="https://res.cloudinary.com/dyc3koszi/image/upload/v1670492180/product_images/ta8c3bjjsjjywcmfkhvy.jpg"
+          alt=""
+        />
+      </div>
+      <div
+        class="flex overflow-x-scroll gap-6 items-center w-fit lg:w-96 rounded-xl scrollbar-hide"
+      >
+        <img
+          class="rounded-xl border w-4/5 lg:w-96 lg:h-96"
+          src="https://res.cloudinary.com/dyc3koszi/image/upload/v1670492181/product_images/ohrvvfg3riqxajvzsq3o.webp"
+          alt=""
+        />
+        <img
+          class="rounded-xl border w-4/5 lg:w-96 lg:h-96"
+          src="https://res.cloudinary.com/dyc3koszi/image/upload/v1670492181/product_images/hgdasvicvtjywp7teqkg.jpg"
+          alt=""
+        />
+        <img
+          class="rounded-xl border w-4/5 lg:w-96 lg:h-96"
+          src="https://res.cloudinary.com/dyc3koszi/image/upload/v1670492179/product_images/yw69f7jrromlgefx9zqm.jpg"
+          alt=""
+        />
+        <img
+          class="rounded-xl border w-4/5 lg:w-96 lg:h-96"
+          src="https://res.cloudinary.com/dyc3koszi/image/upload/v1670492180/product_images/ta8c3bjjsjjywcmfkhvy.jpg"
+          alt=""
+        />
+      </div>
+    </div>
+
+    <div class="flex gap-2 mt-5 items-center justify-center">
+      <div class="w-12 h-4 rounded-full bg-turquoise"></div>
+      <div class="w-4 h-4 rounded-full bg-veryLightGray"></div>
+      <div class="w-4 h-4 rounded-full bg-veryLightGray"></div>
+      <div class="w-4 h-4 rounded-full bg-veryLightGray"></div>
+    </div>
+  </div>
+  <!-- text and actions -->
+  <div class="flex flex-col lg:gap-3 lg:mt-10">
+    <h1 class="uppercase font-bold text-xl lg:text-3xl max-w-lg">
+      Stay focussed sticker
+    </h1>
+    <div>
+      <span class="font-bold text-xl lg:text-3xl mr-2">&#8377;29.00</span>
+      <span class="text-base text-darkGray line-through lg:text-xl mr-2"
+        >&#8377;69.00</span
+      >
+      <span class="text-base animate-pulse font-bold text-turquoise mr-2"
+        >46% off</span
+      >
+    </div>
+    <form method="post">
+      <!-- quantity input -->
+      <div class="custom-number-input w-32 mt-5">
+        <label
+          for="custom-input-number"
+          class="uppercase whitespace-nowrap text-sm"
+          >select quantity
+        </label>
+        <div
+          class="flex flex-row h-10 w-full border relative bg-transparent mt-1"
+        >
+          <button
+            data-action="decrement"
+            type="button"
+            class="text-darkGray hover:bg-lightGray h-full w-20 cursor-pointer outline-none focus:outline-none"
+          >
+            <span class="m-auto text-2xl">-</span>
+          </button>
+          <input
+            type="number"
+            readonly
+            class="outline-none focus:outline-none text-center w-full font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-700"
+            name="custom-input-number"
+            value="1"
+          />
+          <button
+            data-action="increment"
+            type="button"
+            class="text-darkGray hover:bg-lightGray h-full w-20 cursor-pointer focus:outline-none"
+          >
+            <span class="m-auto text-2xl">+</span>
+          </button>
+        </div>
+      </div>
+      <!-- action buttons -->
+      <div class="flex flex-col lg:flex-row lg:items-center gap-5 mt-10">
+        <button
+          formaction="/buy-now"
+          class="uppercase px-10 py-2 bg-turquoise hover:bg-teal-300 text-black font-semibold"
+        >
+          Buy now
+        </button>
+        <div class="flex items-center gap-5">
+          <button
+            formaction="/add-to-cart"
+            class="uppercase px-8 w-full py-2 border hover:bg-lightGray text-black font-semibold"
+          >
+            add to cart
+          </button>
+          <button formaction="/add-to-wishlist">
+            <i class="bi bi-heart text-2xl hover:text-red-500 text-black"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

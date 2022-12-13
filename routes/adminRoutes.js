@@ -3,7 +3,7 @@ const { upload } = require("../utils/multer");
 
 const adminControllers = require("../controllers/adminControllers");
 
-router.get("/", adminControllers.getHome);
+router.get("/", adminControllers.getDashboard);
 router.get("/login", adminControllers.getLogin);
 router.post("/login", adminControllers.postLogin);
 router.post("/logout", adminControllers.postLogout);

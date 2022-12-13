@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/user-head") %>
+    <script defer src="/js/inc-dec-btn.js"></script>
+  </head>
+  <body>
+    <%- include("./layouts/navbar") %>
+    <main>
+      <section class="mt-10 lg:mx-10 mx-5 flex flex-col justify-around gap-10">
+        <!-- heading -->
+        <h1 class="uppercase font-bold text-xl lg:text-3xl">YOUR ACCOUNT</h1>
+        <!--  -->
+        <div class="lg:ml-16 flex flex-col lg:flex-row lg:gap-20">
+          <ul
+            class="flex lg:flex-col items-center lg:items-start justify-between lg:justify-start lg:gap-8 font-semibold border-b pb-5 lg:border-b-transparent lg:border-r lg:pr-10"
+          >
+            <li class="<%= path=="/account"?"text-black":"text-darkGray hover:text-black" %>">
+                <a href="/account">Account</a>
+            </li>
+            <li class="<%= path=="/addresses"||path=="/add-address"?"text-black":"text-darkGray hover:text-black"%>"><a href="/addresses">Addresses</a></li>
+            <li class="<%= path=="/orders"?"text-black":"text-darkGray hover:text-black" %> ">
+              <a href="/orders">Orders</a>
+            </li>
+            <li>
+              <form action="/logout" method="post">
+                <button type="submit" class="text-darkRed hover:text-red-500">
+                  Logout
+                </button>
+              </form>
+            </li>
+          </ul>
+          <% if(path=="/account") { %>
+          <!--  -->
+          <%- include("./components/account/account-details") %>
+          <!--  -->
+          <% }else if(path=="/addresses") { %>
+          <!--  -->
+          <%- include("./components/account/addresses") %>
+          <!--  -->
+          <% }else if(path=="/add-address") { %>
+            <!--  -->
+            <%- include("./components/account/add-address") %>
+            <!--  -->
+            <% }else if(path=="/orders") { %>
+             <!--  -->
+            <%- include("./components/account/orders") %>
+            <!--  -->
+          <% } %>
+        </div>
+      </section>
+    </main>
+    <!-- pre-footer -->
+    <%- include("./layouts/pre-footer") %>
+    <!-- footer -->
+    <%- include("./layouts/footer") %>
+  </body>
+</html>

@@ -7,6 +7,8 @@ const Category = require("../models/categoryModel");
 const Coupon = require("../models/couponModel");
 const Banner = require("../models/bannerModel");
 
+const ITEMS_PER_PAGE = 10;
+
 exports.getLogin = async (req, res) => {
   res.render("admin/login");
 };
@@ -18,24 +20,31 @@ exports.postLogout = async (req, res) => {
   res.redirect("/admin/login");
 };
 
-exports.getHome = (req, res) => {
+exports.getDashboard = async (req, res) => {
   res.render("admin/dashboard", { path: "/" });
 };
-exports.getProducts = (req, res) => {
-  Category.fetchAll()
-    .then((categories) => categories)
-    .then((categories) => {
-      Product.fetchAll().then((products) => {
-        res.render("admin/products", {
-          path: "/products",
-          categories,
-          products,
-        });
-      });
-    })
-    .catch((err) => {
-      console.log(err);
+exports.getProducts = async (req, res) => {
+  try {
+    const { page } = req.query;
+    const skip = (page - 1) * ITEMS_PER_PAGE || 0;
+    const limit = ITEMS_PER_PAGE;
+    const totalProducts = await Product.count();    
+    const categories = await Category.fetchAll();
+    const products = await Product.fetchAll(skip, limit);
+    res.render("admin/products", {
+      path: "/products",
+      categories,
+      products,
+      totalProducts,
+      skip,
+      limit,
+      page,
+      currentPage: page,
+      lastPage: Math.ceil(totalProducts / limit),
     });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.postAddProduct = (req, res) => {
