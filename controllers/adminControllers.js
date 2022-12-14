@@ -1,38 +1,54 @@
-const { ObjectId } = require("mongodb");
+const { ObjectId } = require('mongodb')
 
-const cloudinary = require("../utils/cloudinary");
+const cloudinary = require('../utils/cloudinary')
 
-const Product = require("../models/productModel");
-const Category = require("../models/categoryModel");
-const Coupon = require("../models/couponModel");
-const Banner = require("../models/bannerModel");
+const Product = require('../models/productModel')
+const Category = require('../models/categoryModel')
+const Coupon = require('../models/couponModel')
+const Banner = require('../models/bannerModel')
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 10
 
 exports.getLogin = async (req, res) => {
-  res.render("admin/login");
-};
+  try {
+    res.render('admin/login')
+  } catch (err) {
+    console.log(err)
+  }
+}
 exports.postLogin = async (req, res) => {
-  res.redirect("/admin");
-};
+  try {
+    res.redirect('/admin')
+  } catch (err) {
+    console.log(err)
+  }
+}
 
 exports.postLogout = async (req, res) => {
-  res.redirect("/admin/login");
-};
+  try {
+    res.redirect('/admin/login')
+  } catch (err) {
+    console.log(err)
+  }
+}
 
 exports.getDashboard = async (req, res) => {
-  res.render("admin/dashboard", { path: "/" });
-};
+  try {
+    res.render('admin/dashboard', { path: '/' })
+  } catch (err) {
+    console.log(err)
+  }
+}
 exports.getProducts = async (req, res) => {
   try {
-    const { page } = req.query;
-    const skip = (page - 1) * ITEMS_PER_PAGE || 0;
-    const limit = ITEMS_PER_PAGE;
-    const totalProducts = await Product.count();    
-    const categories = await Category.fetchAll();
-    const products = await Product.fetchAll(skip, limit);
-    res.render("admin/products", {
-      path: "/products",
+    const { page } = req.query
+    const skip = (page - 1) * ITEMS_PER_PAGE || 0
+    const limit = ITEMS_PER_PAGE
+    const totalProducts = await Product.count()
+    const categories = await Category.fetchAll()
+    const products = await Product.fetchAll(skip, limit)
+    res.render('admin/products', {
+      path: '/products',
       categories,
       products,
       totalProducts,
@@ -40,253 +56,264 @@ exports.getProducts = async (req, res) => {
       limit,
       page,
       currentPage: page,
-      lastPage: Math.ceil(totalProducts / limit),
-    });
+      lastPage: Math.ceil(totalProducts / limit)
+    })
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
-exports.postAddProduct = (req, res) => {
-  const { productTitle, productCategory, productPrice, discount, stock } =
-    req.body;
-  const imgPromises = req.files.map((image) =>
-    cloudinary.uploader.upload(image.path, {
-      folder: "product_images",
-      unique_filename: true,
-    })
-  );
-  Promise.allSettled(imgPromises)
-    .then((results) => {
-      return (imgUrls = results.map((result) => result.value.secure_url));
-    })
-    .then((imgUrls) => {
-      const newProduct = new Product(
-        productTitle,
-        productCategory,
-        productPrice,
-        discount,
-        stock,
-        imgUrls
-      );
-      newProduct
-        .save()
-        .then(() => {
-          console.log("Product Added");
-          res.redirect("/admin/products");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-exports.postEditProduct = async (req, res) => {
-  const { id } = req.body;
-  const updatedProduct = {
-    productTitle: req.body.productTitle,
-    category: ObjectId(req.body.productCategory),
-    productPrice: req.body.productPrice,
-    discount: req.body.discount,
-    stock: req.body.stock,
-    updatedOn: new Date(),
-  };
-  if (req.files) {
+exports.postAddProduct = async (req, res) => {
+  try {
+    const { productTitle, productCategory, productPrice, discount, stock } =
+      req.body
     const imgPromises = req.files.map((image) =>
       cloudinary.uploader.upload(image.path, {
-        folder: "product_images",
-        unique_filename: true,
+        folder: 'product_images',
+        unique_filename: true
       })
-    );
-    const results = await Promise.allSettled(imgPromises);
-    const imgUrls = results.map((result) => result.value.secure_url);
-    updatedProduct.imgUrls = imgUrls;
+    )
+    const results = await Promise.allSettled(imgPromises)
+    const imgUrls = results.map((result) => result.value.secure_url)
+    const newProduct = new Product(
+      productTitle,
+      productCategory,
+      productPrice,
+      discount,
+      stock,
+      imgUrls
+    )
+    await newProduct.save()
+    console.log('Product Added')
+    res.redirect('/admin/products')
+  } catch (err) {
+    console.log(err)
   }
-  await Product.update(id, updatedProduct);
-  res.redirect("/admin/products");
-};
+}
+
+exports.postEditProduct = async (req, res) => {
+  try {
+    const { id } = req.body
+    const updatedProduct = {
+      productTitle: req.body.productTitle,
+      category: ObjectId(req.body.productCategory),
+      productPrice: req.body.productPrice,
+      discount: req.body.discount,
+      stock: req.body.stock,
+      updatedOn: new Date()
+    }
+    if (req.files) {
+      const imgPromises = req.files.map((image) =>
+        cloudinary.uploader.upload(image.path, {
+          folder: 'product_images',
+          unique_filename: true
+        })
+      )
+      const results = await Promise.allSettled(imgPromises)
+      const imgUrls = results.map((result) => result.value.secure_url)
+      updatedProduct.imgUrls = imgUrls
+    }
+    await Product.update(id, updatedProduct)
+    res.redirect('/admin/products')
+  } catch (err) {
+    console.log(err)
+  }
+}
 exports.postDeleteProduct = async (req, res) => {
-  const { id } = req.body;
-  console.log(id);
-  await Product.softDelete(id);
-  res.redirect("/admin/products");
-};
+  try {
+    const { id } = req.body
+    console.log(id)
+    await Product.softDelete(id)
+    res.redirect('/admin/products')
+  } catch (err) {
+    console.log(err)
+  }
+}
 
 exports.getCategories = async (req, res) => {
-  const categories = await Category.fetchAll();
-  res.render("admin/categories", { path: "/categories", categories });
-};
-exports.postAddCategory = (req, res) => {
-  const categoryName = req.body.categoryName.toLowerCase();
-  const newCategory = new Category(categoryName);
-  newCategory
-    .save()
-    .then(() => {
-      console.log("Category Added");
-      res.redirect("/admin/categories");
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
+  try {
+    const categories = await Category.fetchAll()
+    res.render('admin/categories', { path: '/categories', categories })
+  } catch (err) {
+    console.log(err)
+  }
+}
+exports.postAddCategory = async (req, res) => {
+  try {
+    const categoryName = req.body.categoryName.toLowerCase()
+    const newCategory = new Category(categoryName)
+    await newCategory.save()
+    console.log('Category Added')
+    res.redirect('/admin/categories')
+  } catch (err) {
+    console.log(err)
+  }
+}
 exports.postEditCategory = async (req, res) => {
-  const { id } = req.body;
-  const updatedCategory = {
-    categoryName: req.body.categoryName,
-    updatedOn: new Date(),
-  };
-  await Category.update(id, updatedCategory);
-  res.redirect("/admin/categories");
-};
+  try {
+    const { id } = req.body
+    const updatedCategory = {
+      categoryName: req.body.categoryName,
+      updatedOn: new Date()
+    }
+    await Category.update(id, updatedCategory)
+    res.redirect('/admin/categories')
+  } catch (err) {
+    console.log(err)
+  }
+}
 exports.postDeleteCategory = async (req, res) => {
-  const { id } = req.body;
-  console.log(id);
-  await Category.softDelete(id);
-  res.redirect("/admin/categories");
-};
+  try {
+    const { id } = req.body
+    console.log(id)
+    await Category.softDelete(id)
+    res.redirect('/admin/categories')
+  } catch (err) {
+    console.log(err)
+  }
+}
 
-exports.getOrders = (req, res) => {
-  res.render("admin/orders", { path: "/orders" });
-};
-exports.getInvoice = (req, res) => {
-  const orderId = req.params.orderId;
-  res.render("admin/invoice", { path: "/orders", orderId: orderId });
-};
+exports.getOrders = async (req, res) => {
+  try {
+    res.render('admin/orders', { path: '/orders' })
+  } catch (err) {
+    console.log(err)
+  }
+}
+exports.getInvoice = async (req, res) => {
+  try {
+    const orderId = req.params.orderId
+    res.render('admin/invoice', { path: '/orders', orderId })
+  } catch (err) {
+    console.log(err)
+  }
+}
 
-exports.getCoupons = (req, res) => {
-  Coupon.fetchAll()
-    .then((coupons) => {
-      const changedCoupons = coupons.map((coupon) => {
-        const dateString = coupon.expiresOn;
-        const options = { year: "numeric", month: "short", day: "numeric" };
-        coupon.expiresOn = new Date(dateString).toLocaleDateString(
-          undefined,
-          options
-        );
-        coupon.expiryDate = new Date(dateString).toISOString().substring(0, 10);
-        return coupon;
-      });
-      res.render("admin/coupons", {
-        path: "/coupons",
-        coupons: changedCoupons,
-      });
+exports.getCoupons = async (req, res) => {
+  try {
+    const coupons = await Coupon.fetchAll()
+    const changedCoupons = coupons.map((coupon) => {
+      const dateString = coupon.expiresOn
+      const options = { year: 'numeric', month: 'short', day: 'numeric' }
+      coupon.expiresOn = new Date(dateString).toLocaleDateString(
+        undefined,
+        options
+      )
+      coupon.expiryDate = new Date(dateString).toISOString().substring(0, 10)
+      return coupon
     })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-exports.postAddCoupon = (req, res) => {
-  const couponCode = req.body.couponCode.toUpperCase();
-  const createdOn = new Date();
-  const expiresOn = new Date(req.body.expiresOn);
-  const { amount, minPurchase } = req.body;
-  const newCoupon = new Coupon(
-    couponCode,
-    amount,
-    minPurchase,
-    createdOn,
-    expiresOn
-  );
-  newCoupon
-    .save()
-    .then(() => {
-      console.log("Coupon Added");
-      res.redirect("/admin/coupons");
+    res.render('admin/coupons', {
+      path: '/coupons',
+      coupons: changedCoupons
     })
-    .catch((err) => {
-      console.log(err);
-    });
-};
+  } catch (err) {
+    console.log(err)
+  }
+}
+exports.postAddCoupon = async (req, res) => {
+  try {
+    const couponCode = req.body.couponCode.toUpperCase()
+    const createdOn = new Date()
+    const expiresOn = new Date(req.body.expiresOn)
+    const { amount, minPurchase } = req.body
+    const newCoupon = new Coupon(
+      couponCode,
+      amount,
+      minPurchase,
+      createdOn,
+      expiresOn
+    )
+    await newCoupon.save()
+    console.log('Coupon Added')
+    res.redirect('/admin/coupons')
+  } catch (err) {
+    console.log(err)
+  }
+}
 exports.postEditCoupon = async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id } = req.body
     const updatedCoupon = {
       couponCode: req.body.couponCode,
       amount: req.body.amount,
       minPurchase: req.body.minPurchase,
       expiresOn: new Date(req.body.expiresOn),
-      updatedOn: new Date(),
-    };
-    await Coupon.update(id, updatedCoupon);
-    res.redirect("/admin/coupons");
+      updatedOn: new Date()
+    }
+    await Coupon.update(id, updatedCoupon)
+    res.redirect('/admin/coupons')
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 exports.postDeleteCoupon = async (req, res) => {
   try {
-    const { id } = req.body;
-    await Coupon.softDelete(id);
-    res.redirect("/admin/coupons");
+    const { id } = req.body
+    await Coupon.softDelete(id)
+    res.redirect('/admin/coupons')
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 exports.getBanners = async (req, res) => {
   try {
-    const banners = await Banner.fetchAll();
-    res.render("admin/banners", { path: "/banners", banners });
+    const banners = await Banner.fetchAll()
+    res.render('admin/banners', { path: '/banners', banners })
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
-exports.postAddBanner = (req, res) => {
-  const { bannerTitle } = req.body;
-  cloudinary.uploader
-    .upload(req.file.path, {
-      folder: "banner_images",
-      unique_filename: true,
+}
+exports.postAddBanner = async (req, res) => {
+  try {
+    const { bannerTitle } = req.body
+    const fileData = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'banner_images',
+      unique_filename: true
     })
-    .then((fileData) => {
-      const newBanner = new Banner(bannerTitle, fileData.secure_url);
-      newBanner
-        .save()
-        .then(() => {
-          console.log("Banner Added");
-          res.redirect("/admin/banners");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
+    const newBanner = new Banner(bannerTitle, fileData.secure_url)
+    await newBanner.save()
+    console.log('Banner Added')
+    res.redirect('/admin/banners')
+  } catch (err) {
+    console.log(err)
+  }
+}
 exports.postEditBanner = async (req, res) => {
   try {
-    console.log(req.file);
-    const { id } = req.body;
+    console.log(req.file)
+    const { id } = req.body
     const updatedBanner = {
       bannerTitle: req.body.bannerTitle,
-      updatedOn: new Date(),
-    };
+      updatedOn: new Date()
+    }
     if (req.file) {
       const file = await cloudinary.uploader.upload(req.file.path, {
-        folder: "banner_images",
-        unique_filename: true,
-      });
-      updatedBanner.imgUrl = file.secure_url;
+        folder: 'banner_images',
+        unique_filename: true
+      })
+      updatedBanner.imgUrl = file.secure_url
     }
-    await Banner.update(id, updatedBanner);
-    res.redirect("/admin/banners");
+    await Banner.update(id, updatedBanner)
+    res.redirect('/admin/banners')
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 exports.postDeleteBanner = async (req, res) => {
   try {
-    const { id } = req.body;
-    await Banner.softDelete(id);
-    res.redirect("/admin/banners");
+    const { id } = req.body
+    await Banner.softDelete(id)
+    res.redirect('/admin/banners')
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
-exports.getCustomers = (req, res) => {
-  res.render("admin/customers", { path: "/customers" });
-};
+exports.getCustomers = async (req, res) => {
+  try {
+    res.render('admin/customers', { path: '/customers' })
+  } catch (err) {
+    console.log(err)
+  }
+}

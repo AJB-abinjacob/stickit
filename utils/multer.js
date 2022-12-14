@@ -1,5 +1,5 @@
-const path = require("path");
-const multer = require("multer");
+// const path = require('path')
+const multer = require('multer')
 
 // // // multer storage for storing locally
 // const storage = multer.diskStorage({
@@ -14,20 +14,20 @@ const multer = require("multer");
 // });
 
 // multer storage
-const storage = multer.diskStorage({});
+const storage = multer.diskStorage({})
 
 // multer filter
 const fileFilter = (req, file, cb) => {
   if (
-    file.mimetype === "image/png" ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg" ||
-    file.mimetype === "image/webp"
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg' ||
+    file.mimetype === 'image/webp'
   ) {
-    cb(null, true);
+    cb(null, true)
   } else {
-    cb(new Error("File type is not supported"), false);
+    cb(new Error('File type is not supported'), false)
   }
-};
+}
 
-exports.upload = multer({ storage, fileFilter });
+exports.upload = multer({ storage, fileFilter })

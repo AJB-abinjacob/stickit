@@ -1,14 +1,12 @@
 const { ObjectId } = require('mongodb')
 const getDb = require('../utils/database').getDb
 
-class Product {
-  constructor (productTitle, category, productPrice, discount, stock, imgUrls) {
-    this.productTitle = productTitle
-    this.productPrice = productPrice
-    this.discount = discount
-    this.stock = stock
-    this.category = ObjectId(category)
-    this.imgUrls = imgUrls
+class Customer {
+  constructor (name, email, phone, password) {
+    this.name = name
+    this.email = email
+    this.phone = phone
+    this.password = password
     this.active = true
     this.createdOn = new Date()
     this.updatedOn = new Date()
@@ -17,7 +15,7 @@ class Product {
   save () {
     const db = getDb()
     return db
-      .collection('products')
+      .collection('customers')
       .insertOne(this)
       .then((result) => {
         console.log(result)
@@ -27,41 +25,33 @@ class Product {
       })
   }
 
-  static count () {
+  static findByEmail (email) {
     const db = getDb()
-    return db.collection('products').countDocuments({ deleted: { $ne: true } })
+    return db.collection('customers').findOne({ email })
   }
 
-  static fetchAll (skip, limit) {
+  static findByPhone (phone) {
+    const db = getDb()
+    return db.collection('customers').findOne({ phone })
+  }
+
+  static fetchAll () {
     const db = getDb()
     return db
-      .collection('products')
-      .aggregate([
-        { $match: { deleted: { $ne: true } } },
-        { $sort: { createdOn: -1 } },
-        { $skip: skip || 0 },
-        { $limit: limit || null },
-        {
-          $lookup: {
-            from: 'categories',
-            localField: 'category',
-            foreignField: '_id',
-            as: 'categoryName'
-          }
-        }
-      ])
+      .collection('customers')
+      .find({ deleted: { $ne: true } })
+      .sort({ createdOn: -1 })
       .toArray()
-  }
-
-  static fetchById (id) {
-    const db = getDb()
-    return db.collection('products').findOne({ _id: ObjectId(id) })
+      .then((coupons) => coupons)
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   static update (id, data) {
     const db = getDb()
     return db
-      .collection('products')
+      .collection('customers')
       .updateOne(
         { _id: ObjectId(id) },
         {
@@ -79,7 +69,7 @@ class Product {
   static softDelete (id) {
     const db = getDb()
     return db
-      .collection('products')
+      .collection('customers')
       .updateOne(
         { _id: ObjectId(id) },
         {
@@ -95,4 +85,4 @@ class Product {
   }
 }
 
-module.exports = Product
+module.exports = Customer
