@@ -9,7 +9,6 @@ class Product {
     this.stock = stock
     this.category = ObjectId(category)
     this.imgUrls = imgUrls
-    this.active = true
     this.createdOn = new Date()
     this.updatedOn = new Date()
   }
@@ -58,40 +57,44 @@ class Product {
     return db.collection('products').findOne({ _id: ObjectId(id) })
   }
 
-  static update (id, data) {
+  static fetchByCategory (id) {
     const db = getDb()
     return db
       .collection('products')
-      .updateOne(
-        { _id: ObjectId(id) },
-        {
-          $set: data
-        }
-      )
-      .then((result) => {
-        console.log(result)
+      .find({ category: ObjectId(id), deleted: { $ne: true } })
+      .sort({ createdOn: -1 })
+      .toArray()
+  }
+
+  static fetchByValue (value) {
+    const db = getDb()
+    return db
+      .collection('products')
+      .find({
+        deleted: { $ne: true },
+        productTitle: { $regex: value, $options: 'i' }
       })
-      .catch((err) => {
-        console.log(err)
-      })
+      .toArray()
+  }
+
+  static update (id, data) {
+    const db = getDb()
+    return db.collection('products').updateOne(
+      { _id: ObjectId(id) },
+      {
+        $set: data
+      }
+    )
   }
 
   static softDelete (id) {
     const db = getDb()
-    return db
-      .collection('products')
-      .updateOne(
-        { _id: ObjectId(id) },
-        {
-          $set: { deleted: true }
-        }
-      )
-      .then((result) => {
-        console.log(result)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    return db.collection('products').updateOne(
+      { _id: ObjectId(id) },
+      {
+        $set: { deleted: true }
+      }
+    )
   }
 }
 

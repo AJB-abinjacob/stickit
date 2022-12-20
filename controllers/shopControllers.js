@@ -1,6 +1,9 @@
 const bcrypt = require('bcrypt')
 
+const { ObjectId } = require('mongodb')
 const Customer = require('../models/customerModel')
+const Product = require('../models/productModel')
+const Category = require('../models/categoryModel')
 
 exports.getLogin = async (req, res) => {
   try {
@@ -114,23 +117,70 @@ exports.getResetPassword = async (req, res) => {
 
 exports.getHome = async (req, res) => {
   try {
-    res.render('shop/home')
+    const userId = '63986df5de30499b024a4c94'
+    const categories = await Category.fetchAll()
+    const wishlistArray = await Customer.fetchWishlist(userId)
+    const wishlist = wishlistArray[0].wishlist
+    const recentlyAddedProducts = await Product.fetchAll(0, 4)
+    recentlyAddedProducts.forEach((product) => {
+      wishlist.forEach((wishlistItem) => {
+        if (product._id.toString() === wishlistItem.toString()) {
+          product.isWishlisted = true
+        }
+      })
+    })
+    res.render('shop/home', {
+      products: recentlyAddedProducts,
+      categories
+    })
   } catch (err) {
     console.log(err)
   }
 }
 exports.getProduct = async (req, res) => {
   try {
-    console.log(req.params.id)
-    res.render('shop/product')
+    const categories = await Category.fetchAll()
+    const product = await Product.fetchById(req.params.id)
+    console.log(product)
+    res.render('shop/product', { product, categories })
   } catch (err) {
     console.log(err)
   }
 }
 exports.getProductsByCategory = async (req, res) => {
   try {
+    const userId = '63986df5de30499b024a4c94'
+    const categories = await Category.fetchAll()
     const { category } = req.params
-    res.render('shop/show-products', { category })
+    let categoryExist
+    let products = []
+    categories.forEach((item) => {
+      if (item.categoryName === category) {
+        categoryExist = item
+      }
+    })
+    if (categoryExist) {
+      products = await Product.fetchByCategory(categoryExist._id)
+      const wishlistArray = await Customer.fetchWishlist(userId)
+      const wishlist = wishlistArray[0].wishlist
+      products.forEach(product => {
+        wishlist.forEach((wishlistItem) => {
+          if (product._id.toString() === wishlistItem.toString()) {
+            product.isWishlisted = true
+          }
+        })
+      })
+      return res.render('shop/show-products', {
+        category,
+        categories,
+        products
+      })
+    }
+    res.render('shop/show-products', {
+      category,
+      categories,
+      products
+    })
   } catch (err) {
     console.log(err)
   }
@@ -139,8 +189,10 @@ exports.getProductsBySearch = async (req, res) => {
   try {
     let category // need undefined value
     const query = req.query.search
-    console.log(query)
-    res.render('shop/show-products', { category, query })
+    const categories = await Category.fetchAll()
+    const products = await Product.fetchByValue(query)
+    console.log(products.length)
+    res.render('shop/show-products', { category, query, categories, products })
   } catch (err) {
     console.log(err)
   }
@@ -148,7 +200,29 @@ exports.getProductsBySearch = async (req, res) => {
 
 exports.getWishlist = async (req, res) => {
   try {
-    res.render('shop/wishlist')
+    const categories = await Category.fetchAll()
+    res.render('shop/wishlist', { categories })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+exports.addToWishlist = async (req, res) => {
+  try {
+    const userId = '63986df5de30499b024a4c94'
+    const productId = req.params.id
+    await Customer.addToWishlist(userId, ObjectId(productId))
+    res.json('added to wishlist')
+  } catch (err) {
+    console.log(err)
+  }
+}
+exports.removeFromWishlist = async (req, res) => {
+  try {
+    const userId = '63986df5de30499b024a4c94'
+    const productId = req.params.id
+    await Customer.removeFromWishlist(userId, ObjectId(productId))
+    res.json('removed from wishlist')
   } catch (err) {
     console.log(err)
   }
@@ -156,7 +230,32 @@ exports.getWishlist = async (req, res) => {
 
 exports.getCart = async (req, res) => {
   try {
-    res.render('shop/cart')
+    const categories = await Category.fetchAll()
+    res.render('shop/cart', { categories })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+exports.addToCart = async (req, res) => {
+  try {
+    const userId = '63986df5de30499b024a4c94'
+    const product = {
+      productId: ObjectId(req.params.id),
+      quantity: parseInt(req.body.quantity)
+    }
+    await Customer.addToCart(userId, product)
+    res.json('added-to-cart')
+  } catch (err) {
+    console.log(err)
+  }
+}
+exports.removeFromCart = async (req, res) => {
+  try {
+    // const userId = '63986df5de30499b024a4c94'
+    const product = { productId: ObjectId(req.params.id) }
+    console.log(product)
+    res.json('removed-from-cart')
   } catch (err) {
     console.log(err)
   }
@@ -164,28 +263,32 @@ exports.getCart = async (req, res) => {
 
 exports.getAccount = async (req, res) => {
   try {
-    res.render('shop/account', { path: '/account' })
+    const categories = await Category.fetchAll()
+    res.render('shop/account', { path: '/account', categories })
   } catch (err) {
     console.log(err)
   }
 }
 exports.getAddresses = async (req, res) => {
   try {
-    res.render('shop/account', { path: '/addresses' })
+    const categories = await Category.fetchAll()
+    res.render('shop/account', { path: '/addresses', categories })
   } catch (err) {
     console.log(err)
   }
 }
 exports.getAddAddress = async (req, res) => {
   try {
-    res.render('shop/account', { path: '/add-address' })
+    const categories = await Category.fetchAll()
+    res.render('shop/account', { path: '/add-address', categories })
   } catch (err) {
     console.log(err)
   }
 }
 exports.getOrders = async (req, res) => {
   try {
-    res.render('shop/account', { path: '/orders' })
+    const categories = await Category.fetchAll()
+    res.render('shop/account', { path: '/orders', categories })
   } catch (err) {
     console.log(err)
   }

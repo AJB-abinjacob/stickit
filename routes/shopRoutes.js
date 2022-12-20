@@ -6,8 +6,14 @@ router.get('/', shopControllers.getHome)
 router.get('/product/:id', shopControllers.getProduct)
 router.get('/category/:category', shopControllers.getProductsByCategory)
 router.get('/search', shopControllers.getProductsBySearch)
+
 router.get('/cart', shopControllers.getCart)
+router.post('/add-to-cart/:id', shopControllers.addToCart)
+router.post('/remove-from-cart/:id', shopControllers.removeFromCart)
+
 router.get('/wishlist', shopControllers.getWishlist)
+router.post('/add-to-wishlist/:id', shopControllers.addToWishlist)
+router.post('/remove-from-wishlist/:id', shopControllers.removeFromWishlist)
 
 router.get('/account', shopControllers.getAccount)
 router.get('/addresses', shopControllers.getAddresses)

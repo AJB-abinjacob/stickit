@@ -4,7 +4,6 @@ const getDb = require('../utils/database').getDb
 class Category {
   constructor (categoryName) {
     this.categoryName = categoryName
-    this.active = true
     this.createdOn = new Date()
     this.updatedOn = new Date()
   }

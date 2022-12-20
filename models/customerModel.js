@@ -7,6 +7,8 @@ class Customer {
     this.email = email
     this.phone = phone
     this.password = password
+    this.cart = []
+    this.wishlist = []
     this.active = true
     this.createdOn = new Date()
     this.updatedOn = new Date()
@@ -83,6 +85,70 @@ class Customer {
         console.log(err)
       })
   }
-}
 
+  static async addToCart (userId, product) {
+    const db = getDb()
+    let productExist
+    const userCart = await db
+      .collection('customers')
+      .find({ _id: ObjectId(userId) })
+      .project({ cart: 1 })
+      .toArray()
+    console.log(userCart)
+    if (userCart[0].cart.length > 0) {
+      userCart[0].cart.forEach((item) => {
+        if (item.productId.toString() === product.productId.toString()) {
+          productExist = true
+        }
+      })
+    }
+    if (productExist) {
+      return db.collection('customers').updateOne(
+        {
+          _id: ObjectId(userId),
+          'cart.productId': ObjectId(product.productId)
+        },
+        {
+          $inc: {
+            'cart.$.quantity': 1
+          }
+        }
+      )
+    }
+    return db
+      .collection('customers')
+      .updateOne({ _id: ObjectId(userId) }, { $addToSet: { cart: product } })
+  }
+
+  static async removeFromCart (userId, product) {}
+
+  static async addToWishlist (userId, product) {
+    const db = getDb()
+    return db
+      .collection('customers')
+      .updateOne(
+        { _id: ObjectId(userId) },
+        { $addToSet: { wishlist: product } }
+      )
+  }
+
+  static async removeFromWishlist (userId, product) {
+    const db = getDb()
+    return db
+      .collection('customers')
+      .updateOne(
+        { _id: ObjectId(userId) },
+        { $pull: { wishlist: product } }
+      )
+  }
+
+  static fetchWishlist (userId) {
+    const db = getDb()
+    return db
+      .collection('customers')
+      .find({ _id: ObjectId(userId) })
+      .project({ wishlist: 1 })
+      .toArray()
+  }
+}
 module.exports = Customer

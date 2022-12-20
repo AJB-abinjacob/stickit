@@ -11,10 +11,13 @@
         name="search"
         autofocus
         required
-        value="search"
+        value="<%= query %>"
         class="px-3 py-2 border bg-white focus:outline-none block mx-auto w-full md:w-1/2"
       />
     </form>
   </div>
-  <p class="text-sm mt-3 font-semibold">21 results found for "coding".</p>
+  <p class="text-sm mt-3 font-semibold">
+    <%= products.length %> results found for
+    <span class="uppercase">"<%= query %>"</span>.
+  </p>
 </section>

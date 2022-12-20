@@ -22,13 +22,7 @@
                 class="text-xs font-semibold text-darkGray px-6 py-2 text-left"
               >
                 IMAGE TITLE
-              </th>
-              <th
-                scope="col"
-                class="text-xs font-semibold text-darkGray px-6 py-2 text-center"
-              >
-                ACTIVE
-              </th>
+              </th>              
               <th
                 scope="col"
                 class="text-xs font-semibold text-darkGray px-6 py-2 text-center"
@@ -48,30 +42,7 @@
               </td>
               <td class="text-sm text-darkGray capitalize px-6 py-4">
                 <%= item.bannerTitle %>
-              </td>
-              <td
-                class="text-sm text-darkGray px-6 py-4 whitespace-nowrap text-center"
-              >
-                <!-- toggle button -->
-                <form
-                  action="/admin/banner-active"
-                  method="post"
-                  id="toggleBtnForm"
-                >
-                  <label
-                    class="inline-flex relative items-center cursor-pointer"
-                  >
-                    <input type="checkbox" value="" class="sr-only peer" <%=
-                    item.active===true?"checked":"" %>/>
-
-                    <div
-                      class="w-11 h-6 bg-lightGreen rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-darkGreen"
-                    ></div>
-                  </label>
-                </form>
-
-                <!--  -->
-              </td>
+              </td>              
               <td class="px-6 py-4 whitespace-nowrap text-xl text-center">
                 <button class="editBtn">
                   <i class="bi bi-pencil-square text-darkGreen"></i>

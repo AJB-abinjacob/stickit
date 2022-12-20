@@ -7,7 +7,6 @@ class Coupon {
     this.amount = amount
     this.minPurchase = minPurchase
     this.expiresOn = expiresOn
-    this.active = true
     this.createdOn = new Date()
     this.updatedOn = new Date()
   }

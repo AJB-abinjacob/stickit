@@ -5,7 +5,6 @@ class Banner {
   constructor (bannerTitle, imgUrl) {
     this.bannerTitle = bannerTitle
     this.imgUrl = imgUrl
-    this.active = true
     this.createdOn = new Date()
     this.updatedOn = new Date()
   }

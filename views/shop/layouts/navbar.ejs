@@ -60,11 +60,15 @@
       Shop by category
       <ul
         id="mobileCategoryList"
-        class="hidden text-lightGray ml-5 animate-slide-down cursor-pointer"
+        class="hidden text-lightGray animate-slide-down cursor-pointer"
       >
-        <li class="hover:underline"><a href="/category/hello">Hello</a></li>
-        <li class="hover:underline">Hello</li>
-        <li class="hover:underline">Hello</li>
+        <% categories.forEach(category=>{%>
+        <li class="hover:underline capitalize mt-2 text-center">
+          <a href="/category/<%= category.categoryName %>">
+            <%= category.categoryName %>
+          </a>
+        </li>
+        <%}) %>
       </ul>
     </li>
     <li class="py-1 hover:text-white">
@@ -97,16 +101,15 @@
 
 <ul
   id="categoryList"
-  class="hidden z-10 bg-veryDarkGray text-white animate-slide-down w-fit px-10 py-3 flex-wrap gap-5 max-w-sm absolute top-14 right-1/3"
+  class="hidden z-10 bg-veryDarkGray text-white animate-slide-down w-fit px-10 py-3 flex-wrap gap-5 max-w-sm fixed top-14 right-1/3"
 >
-  <li class="hover:underline"><a href="/category/hello">Hello</a></li>
-  <li class="hover:underline">Hello</li>
-  <li class="hover:underline">Hello</li>
-  <li class="hover:underline">Hello</li>
-  <li class="hover:underline">Hello</li>
-  <li class="hover:underline">Hello</li>
-  <li class="hover:underline">Hello</li>
-  <li class="hover:underline">Hello</li>
+  <% categories.forEach(category=>{%>
+  <li class="hover:underline capitalize">
+    <a href="/category/<%= category.categoryName %>"
+      ><%= category.categoryName %></a
+    >
+  </li>
+  <%}) %>
 </ul>
 
 <!-- search -->
