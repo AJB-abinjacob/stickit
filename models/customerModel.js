@@ -27,6 +27,24 @@ class Customer {
       })
   }
 
+  static findById (id) {
+    const db = getDb()
+    return db
+      .collection('customers')
+      .find({ _id: ObjectId(id) })
+      .project({ name: 1, email: 1, phone: 1 })
+      .toArray()
+  }
+
+  static findByIdForPassword (id) {
+    const db = getDb()
+    return db
+      .collection('customers')
+      .find({ _id: ObjectId(id) })
+      .project({ password: 1 })
+      .toArray()
+  }
+
   static findByEmail (email) {
     const db = getDb()
     return db.collection('customers').findOne({ email })
@@ -44,46 +62,69 @@ class Customer {
       .find({ deleted: { $ne: true } })
       .sort({ createdOn: -1 })
       .toArray()
-      .then((coupons) => coupons)
-      .catch((err) => {
-        console.log(err)
-      })
+  }
+
+  static fetchAdresses (id) {
+    const db = getDb()
+    return db
+      .collection('customers')
+      .find({ _id: ObjectId(id) })
+      .project({ addresses: 1 })
+      .toArray()
+  }
+
+  static addAddress (id, address) {
+    const db = getDb()
+    return db
+      .collection('customers')
+      .updateOne({ _id: ObjectId(id) }, { $push: { addresses: address } })
   }
 
   static update (id, data) {
     const db = getDb()
-    return db
-      .collection('customers')
-      .updateOne(
-        { _id: ObjectId(id) },
-        {
-          $set: data
-        }
-      )
-      .then((result) => {
-        console.log(result)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    return db.collection('customers').updateOne(
+      { _id: ObjectId(id) },
+      {
+        $set: data
+      }
+    )
   }
 
   static softDelete (id) {
     const db = getDb()
+    return db.collection('customers').updateOne(
+      { _id: ObjectId(id) },
+      {
+        $set: { deleted: true }
+      }
+    )
+  }
+
+  static fetchCart (userId) {
+    const db = getDb()
     return db
       .collection('customers')
-      .updateOne(
-        { _id: ObjectId(id) },
+      .find({ _id: ObjectId(userId) }).project({ cart: 1 })
+      .toArray()
+  }
+
+  static fetchCartItems (userId) {
+    const db = getDb()
+    return db
+      .collection('customers')
+      .aggregate([
+        { $match: { _id: ObjectId(userId) } },
+        { $project: { cart: 1 } },
         {
-          $set: { deleted: true }
+          $lookup: {
+            from: 'products',
+            localField: 'cart.productId',
+            foreignField: '_id',
+            as: 'products'
+          }
         }
-      )
-      .then((result) => {
-        console.log(result)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+      ])
+      .toArray()
   }
 
   static async addToCart (userId, product) {
@@ -94,7 +135,6 @@ class Customer {
       .find({ _id: ObjectId(userId) })
       .project({ cart: 1 })
       .toArray()
-    console.log(userCart)
     if (userCart[0].cart.length > 0) {
       userCart[0].cart.forEach((item) => {
         if (item.productId.toString() === product.productId.toString()) {
@@ -110,7 +150,7 @@ class Customer {
         },
         {
           $inc: {
-            'cart.$.quantity': 1
+            'cart.$.quantity': product.quantity
           }
         }
       )
@@ -120,7 +160,64 @@ class Customer {
       .updateOne({ _id: ObjectId(userId) }, { $addToSet: { cart: product } })
   }
 
-  static async removeFromCart (userId, product) {}
+  static removeFromCart (userId, productId) {
+    const db = getDb()
+    return db
+      .collection('customers')
+      .updateOne(
+        { _id: ObjectId(userId) },
+        { $pull: { cart: { productId: ObjectId(productId) } } }
+      )
+  }
+
+  static clearCart (userId) {
+    const db = getDb()
+    return db
+      .collection('customers')
+      .updateOne(
+        { _id: ObjectId(userId) },
+        { $set: { cart: [] } }
+      )
+  }
+
+  static decrementQuantity (userId, productId) {
+    const db = getDb()
+    return db
+      .collection('customers')
+      .updateOne(
+        { _id: ObjectId(userId), 'cart.productId': ObjectId(productId) },
+        { $inc: { 'cart.$.quantity': -1 } }
+      )
+  }
+
+  static fetchWishlist (userId) {
+    const db = getDb()
+    return db
+      .collection('customers')
+      .find({ _id: ObjectId(userId) })
+      .project({ wishlist: 1 })
+      .toArray()
+  }
+
+  static fetchWishlistItems (userId) {
+    const db = getDb()
+    return db
+      .collection('customers')
+      .aggregate([
+        { $match: { _id: ObjectId(userId) } },
+        { $project: { wishlist: 1 } },
+        {
+          $lookup: {
+            from: 'products',
+            localField: 'wishlist',
+            foreignField: '_id',
+            as: 'products'
+          }
+        },
+        { $project: { products: 1 } }
+      ])
+      .toArray()
+  }
 
   static async addToWishlist (userId, product) {
     const db = getDb()
@@ -136,19 +233,7 @@ class Customer {
     const db = getDb()
     return db
       .collection('customers')
-      .updateOne(
-        { _id: ObjectId(userId) },
-        { $pull: { wishlist: product } }
-      )
-  }
-
-  static fetchWishlist (userId) {
-    const db = getDb()
-    return db
-      .collection('customers')
-      .find({ _id: ObjectId(userId) })
-      .project({ wishlist: 1 })
-      .toArray()
+      .updateOne({ _id: ObjectId(userId) }, { $pull: { wishlist: product } })
   }
 }
 module.exports = Customer

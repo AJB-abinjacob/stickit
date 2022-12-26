@@ -1,15 +1,33 @@
 <section
-  class="mt-10 lg:mx-10 mx-5 flex flex-col lg:flex-row justify-between gap-10"
+  class="mt-10 lg:mx-10 mx-5 flex flex-col lg:flex-row justify-between items-center lg:items-start gap-10"
 >
   <div class="w-full">
     <!-- heading -->
     <div class="flex justify-between items-center">
       <h1 class="uppercase font-bold text-xl lg:text-3xl">YOUR CART</h1>
-      <div class="text-sm lg:text-base">3 items in your cart</div>
+      <div class="text-sm lg:text-base">
+        <%= products.length %> items in your cart
+      </div>
     </div>
     <!-- cart items -->
     <div class="mt-10">
       <!-- item -->
+      <% if(products.length==0){ %>
+      <div class="text-center flex flex-col justify-center items-center">
+        <lottie-player
+          src="https://lottie.host/6600106c-7ff4-4a4a-815e-9351c8008cc3/xfYXuaFiZw.json"
+          background="transparent"
+          speed="1"          
+          style="height: 220px;"
+          loop
+          autoplay
+        ></lottie-player>
+        <h1 class="font-semibold mt-3 text-xl">Your cart is empty</h1>
+        <a class="text-turquoise block text-sm mt-3 hover:underline" href="/"
+          >Go add some stickers</a
+        >
+      </div>
+      <% } %> <% products.forEach(product=>{ %>
       <div
         class="mt-5 flex flex-col lg:flex-row justify-between lg:justify-around items-center border-b pb-4 border-lightGray"
       >
@@ -19,18 +37,19 @@
         >
           <img
             class="w-20 lg:w-28 border rounded-lg"
-            src="https://res.cloudinary.com/dyc3koszi/image/upload/v1670492181/product_images/ohrvvfg3riqxajvzsq3o.webp"
+            src="<%= product.imgUrls[0] %>"
             alt=""
           />
           <div
             class="flex flex-col lg:flex-row lg:items-center justify-between gap-0 lg:gap-10"
           >
-            <div class="text-sm text-darkGray">
-              Stay Focussed Stay Focussed Sticker
+            <div class="text-sm text-darkGray"><%= product.productTitle %></div>
+            <div class="text-lg lg:text-xl font-semibold">
+              &#8377;<%= product.productPrice-product.discount %>.00
             </div>
-            <div class="text-lg lg:text-xl font-semibold">&#8377;29.00</div>
           </div>
         </div>
+        <input type="hidden" value="<%= product._id %>">
         <!-- cart item section2 -->
         <div
           class="mt-5 lg:mt-0 flex items-center justify-between lg:justify-around w-full lg:w-1/2"
@@ -43,164 +62,42 @@
               <button
                 data-action="decrement"
                 type="button"
-                class="text-darkGray hover:bg-lightGray h-full w-20 cursor-pointer outline-none focus:outline-none"
+                class="text-darkGray hover:bg-lightGray h-full w-20 cursor-pointer outline-none focus:outline-none text-2xl"
               >
-                <span class="m-auto text-2xl">-</span>
+                -
               </button>
               <input
                 type="number"
                 readonly
                 class="outline-none focus:outline-none text-center w-full font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-700"
                 name="custom-input-number"
-                value="5"
+                value="<%= product.quantity %>"
               />
               <button
                 data-action="increment"
                 type="button"
-                class="text-darkGray hover:bg-lightGray h-full w-20 cursor-pointer focus:outline-none"
+                class="text-darkGray hover:bg-lightGray h-full w-20 cursor-pointer focus:outline-none text-2xl"
               >
-                <span class="m-auto text-2xl">+</span>
+                +
               </button>
             </div>
           </div>
           <!-- total price -->
-          <div class="text-xl lg:text-2xl font-semibold">&#8377;87.00</div>
+          <div class="text-xl lg:text-2xl font-semibold">
+            &#8377;<span class="totalPrice"
+              ><%=
+              product.discount>0?(parseInt(product.productPrice)-parseInt(product.discount))*product.quantity:parseInt(product.productPrice)*product.quantity%></span
+            >.00
+          </div>
           <!-- delete -->
-          <form action="/remove-from-cart" method="post">
+          <form action="/remove-from-cart/<%= product._id %>" method="post">
             <button type="submit">
               <i class="bi bi-trash text-lg text-darkRed"></i>
             </button>
           </form>
         </div>
       </div>
-      <!-- item -->
-      <div
-        class="mt-5 flex flex-col lg:flex-row justify-between lg:justify-around items-center border-b pb-4 border-lightGray"
-      >
-        <!-- cart item section-1 -->
-        <div
-          class="flex items-center justify-start lg:justify-between w-full lg:w-1/2 gap-5"
-        >
-          <img
-            class="w-20 lg:w-28 border rounded-lg"
-            src="https://res.cloudinary.com/dyc3koszi/image/upload/v1670492181/product_images/ohrvvfg3riqxajvzsq3o.webp"
-            alt=""
-          />
-          <div
-            class="flex flex-col lg:flex-row lg:items-center justify-between gap-0 lg:gap-10"
-          >
-            <div class="text-sm text-darkGray">
-              Stay Focussed Stay Focussed Sticker
-            </div>
-            <div class="text-lg lg:text-xl font-semibold">&#8377;29.00</div>
-          </div>
-        </div>
-        <!-- cart item section2 -->
-        <div
-          class="mt-5 lg:mt-0 flex items-center justify-between lg:justify-around w-full lg:w-1/2"
-        >
-          <!-- quantity -->
-          <div class="custom-number-input w-32">
-            <div
-              class="flex flex-row h-10 w-full border relative bg-transparent mt-1"
-            >
-              <button
-                data-action="decrement"
-                type="button"
-                class="text-darkGray hover:bg-lightGray h-full w-20 cursor-pointer outline-none focus:outline-none"
-              >
-                <span class="m-auto text-2xl">-</span>
-              </button>
-              <input
-                type="number"
-                readonly
-                class="outline-none focus:outline-none text-center w-full font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-700"
-                name="custom-input-number"
-                value="5"
-              />
-              <button
-                data-action="increment"
-                type="button"
-                class="text-darkGray hover:bg-lightGray h-full w-20 cursor-pointer focus:outline-none"
-              >
-                <span class="m-auto text-2xl">+</span>
-              </button>
-            </div>
-          </div>
-          <!-- total price -->
-          <div class="text-xl lg:text-2xl font-semibold">&#8377;87.00</div>
-          <!-- delete -->
-          <form action="/remove-from-cart" method="post">
-            <button type="submit">
-              <i class="bi bi-trash text-lg text-darkRed"></i>
-            </button>
-          </form>
-        </div>
-      </div>
-      <!-- item -->
-      <div
-        class="mt-5 flex flex-col lg:flex-row justify-between lg:justify-around items-center border-b pb-4 border-lightGray"
-      >
-        <!-- cart item section-1 -->
-        <div
-          class="flex items-center justify-start lg:justify-between w-full lg:w-1/2 gap-5"
-        >
-          <img
-            class="w-20 lg:w-28 border rounded-lg"
-            src="https://res.cloudinary.com/dyc3koszi/image/upload/v1670492181/product_images/ohrvvfg3riqxajvzsq3o.webp"
-            alt=""
-          />
-          <div
-            class="flex flex-col lg:flex-row lg:items-center justify-between gap-0 lg:gap-10"
-          >
-            <div class="text-sm text-darkGray">
-              Stay Focussed Stay Focussed Sticker
-            </div>
-            <div class="text-lg lg:text-xl font-semibold">&#8377;29.00</div>
-          </div>
-        </div>
-        <!-- cart item section2 -->
-        <div
-          class="mt-5 lg:mt-0 flex items-center justify-between lg:justify-around w-full lg:w-1/2"
-        >
-          <!-- quantity -->
-          <div class="custom-number-input w-32">
-            <div
-              class="flex flex-row h-10 w-full border relative bg-transparent mt-1"
-            >
-              <button
-                data-action="decrement"
-                type="button"
-                class="text-darkGray hover:bg-lightGray h-full w-20 cursor-pointer outline-none focus:outline-none"
-              >
-                <span class="m-auto text-2xl">-</span>
-              </button>
-              <input
-                type="number"
-                readonly
-                class="outline-none focus:outline-none text-center w-full font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-700"
-                name="custom-input-number"
-                value="5"
-              />
-              <button
-                data-action="increment"
-                type="button"
-                class="text-darkGray hover:bg-lightGray h-full w-20 cursor-pointer focus:outline-none"
-              >
-                <span class="m-auto text-2xl">+</span>
-              </button>
-            </div>
-          </div>
-          <!-- total price -->
-          <div class="text-xl lg:text-2xl font-semibold">&#8377;87.00</div>
-          <!-- delete -->
-          <form action="/remove-from-cart" method="post">
-            <button type="submit">
-              <i class="bi bi-trash text-lg text-darkRed"></i>
-            </button>
-          </form>
-        </div>
-      </div>
+      <% }) %>
     </div>
   </div>
   <!--  -->
@@ -215,20 +112,17 @@
           rows="4"
         ></textarea>
         <div class="flex justify-between items-center mt-4">
-          <label class="tex-xs text-veryDarkGray" for="subtotal"
-            >Subtotal</label
-          >
-          <input
-            id="subtotal"
+          <div class="tex-xs text-veryDarkGray">Subtotal</div>
+          <div            
             class="text-xl font-bold text-right py-2 w-2/3 bg-transparent focus:outline-none"
-            name="subtotal"
-            readonly
-            type="text"
-            value="&#8377;185.00"
-          />
+          >
+            &#8377;<span id="subTotalPrice">0</span>.00
+          </div>
         </div>
+        <input type="hidden" name="subtotal" id="subtotal" value="0" />
         <button
-          class="uppercase text-lg font-semibold py-3 bg-turquoise hover:bg-teal-300 w-full my-3"
+          class="uppercase text-lg font-semibold py-3 bg-turquoise hover:bg-teal-300 w-full  my-3 <%= products.length==0?"bg-gray-400 hover:bg-gray-400":null %> "
+          <%= products.length==0?"disabled":null %> 
           type="submit"
         >
           Checkout
@@ -246,3 +140,5 @@
     >
   </div>
 </section>
+
+

@@ -39,8 +39,9 @@
           </div>
           <div>
             <button
-              class="uppercase w-full py-2 bg-turquoise hover:bg-teal-300 text-black font-semibold"
-              type="button"            
+              class="uppercase w-full py-2 <%= product.stock>0?'bg-turquoise hover:bg-teal-300':"bg-gray-400" %> text-black font-semibold"
+              type="button"
+              <%= product.stock>0?null:"disabled" %>
             >
               Buy now
             </button>
@@ -48,8 +49,9 @@
           <div class="flex items-center justify-between gap-5 mt-3">          
             <div class="w-full">
               <button
-                class="addToCartBtn uppercase w-full py-2 border hover:bg-lightGray text-black font-semibold"
-                type="button"                
+                class="addToCartBtn uppercase w-full py-2 border <%= product.stock>0?'hover:bg-lightGray':"bg-lightGray" %> text-black font-semibold"
+                type="button"
+                <%= product.stock>0?null:"disabled" %>
               >
                 add to cart
               </button>              

@@ -15,11 +15,8 @@
           />
           <h2 class="text-white mt-5 w-60"><%= product.productTitle %></h2>
           <div class="flex items-center gap-3 mt-3">
-            <span class="text-white text-2xl font-semibold"
-              >&#8377;<%= product.productPrice-product.discount %>.00</span
-            ><span class=" text-xs <%= product.stock>0?"text-turquoise":"text-red-500" %>"
-              ><%= product.stock>0?"IN STOCK":"OUT OF STOCK" %></span
-            >
+            <span class="text-white text-2xl font-semibold">&#8377;<%= product.productPrice-product.discount %>.00</span>
+            <span class="text-xs <%= product.stock>0?"text-turquoise":"text-red-500" %>"><%= product.stock>0?"IN STOCK":"OUT OF STOCK" %></span>
           </div>
         </div>
       </a>
@@ -40,8 +37,9 @@
           </div>
           <div>
             <button
-              class="uppercase w-full py-2 bg-turquoise hover:bg-teal-300 text-black font-semibold"
-              type="button"            
+              class="uppercase w-full py-2 <%= product.stock>0?'bg-turquoise hover:bg-teal-300':"bg-gray-400" %> text-black font-semibold"
+              type="button"
+              <%= product.stock>0?null:"disabled" %>
             >
               Buy now
             </button>
@@ -49,18 +47,19 @@
           <div class="flex items-center justify-between gap-5 mt-3">          
             <div class="w-full">
               <button
-                class="addToCartBtn uppercase w-full py-2 border hover:bg-lightGray text-black font-semibold"
-                type="button"                
+                class="addToCartBtn uppercase w-full py-2 border <%= product.stock>0?'hover:bg-lightGray':"bg-lightGray" %> text-black font-semibold"
+                type="button"
+                <%= product.stock>0?null:"disabled" %>
               >
                 add to cart
               </button>              
             </div>
             <div>              
-              <% if(product.isWishlisted){ %>                 
+              <% if(product.isWishlisted){ %>
                 <i class='removeFromWishlist bi bi-heart-fill cursor-pointer text-2xl text-red-500 hover:text-red-600'></i>              
               <% }else{ %>                 
                 <i class='addToWishlist bi bi-heart cursor-pointer text-2xl hover:text-red-500'></i>              
-              <% } %>               
+              <% } %>
             </div>
           </div>
         </form>
@@ -70,5 +69,14 @@
       </div>
     </div>
     <% }) %>
+  </div>
+  <div class="mt-20 flex justify-center items-center">
+    <a 
+      href="/shop"
+      class="py-3 px-8 font-semibold text-white bg-black hover:bg-white hover:text-black border-2 border-black transition-all uppercase"
+    >
+      View More
+    </a>
+
   </div>
 </section>

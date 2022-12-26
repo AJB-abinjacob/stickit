@@ -1,0 +1,380 @@
+<section
+  class="mt-10 lg:mx-10 mx-5 flex flex-col lg:flex-row justify-between items-center lg:items-start gap-10 mb-60"
+>
+  <div class="w-full">
+    <!-- heading -->
+    <div class="flex justify-between items-center">
+      <h1 class="uppercase font-bold text-xl lg:text-3xl">checkout</h1>
+    </div>
+    <!-- info -->
+    <div class="mt-5">
+      <h1 class="font-semibold text-darkGray">Contact information</h1>
+      <p class="text-sm text-darkGray"><%= user.name %> (<%= user.email %>)</p>
+      <form action="/logout" method="post">
+        <button type="submit" class="text-turquoise">Logout</button>
+      </form>
+    </div>
+    <!-- delivery section -->
+    <div class="mt-10">
+      <h1 class="font-semibold text-lg">DELIVERY ADDRESS</h1>
+      <!-- address -->
+      <div class="border w-full lg:w-4/5 px-5 py-5 mt-5 relative">
+        <button id="changeAddressBtn" class="animate-slide-down hidden absolute lg:right-5 lg:top-1/3 right-1 top-1 border border-turquoise hover:bg-turquoise hover:font-medium px-3 py-2 uppercase text-sm transition-all">Change</button>
+        <!--  -->
+        <div class="addressDiv transition-all animate-slide-down w-full pb-5">
+          <div class="">
+            <div class="flex gap-2 items-center">
+              <span
+                class="addressIndicator inline-block w-3 h-3 rounded-full bg-veryLightGray"
+              ></span>
+              <h1 class="inline-block font-semibold">
+                <%= addresses[0].title %>
+              </h1>
+            </div>
+            <div class="text-sm ml-10 mt-1">
+              <%= addresses[0].name %>, <%= addresses[0].phone %>,<br />
+              <%= addresses[0].streetAddress %>,
+              <br /><%= addresses[0].city %>, <%= addresses[0].state %>, <%=
+              addresses[0].pincode %>
+            </div>
+          </div>
+          <input type="hidden" name="id" value="<%= addresses[0].id %>" />
+          <button
+            class="addressBtn mt-3 ml-10 bg-turquoise hover:bg-teal-300 uppercase font-semibold px-10 py-2"
+          >
+            Deliver here
+          </button>
+        </div>
+        <!--  -->
+        <% for(i=1;i<addresses.length;i++){%>
+        <div class="addressDiv transition-all animate-slide-down w-full border-t py-5">
+          <div class="">
+            <div class="flex gap-2 items-center">
+              <span
+                class="addressIndicator inline-block w-3 h-3 rounded-full bg-veryLightGray"
+              ></span>
+              <h1 class="inline-block font-semibold"><%= addresses[i].title %></h1>
+            </div>
+            <div class="text-sm ml-10 mt-1">
+                <%= addresses[i].name %>, <%= addresses[i].phone %>,<br />
+                <%= addresses[i].streetAddress %>,
+                <br /><%= addresses[i].city %>, <%= addresses[i].state %>, <%=
+                addresses[i].pincode %>
+              </div>
+          </div>
+          <input type="hidden" name="id" value="<%= addresses[i].id %>" />
+          <button
+            class="addressBtn mt-3 ml-10 bg-turquoise hover:bg-teal-300 uppercase font-semibold px-10 py-2"
+          >
+            Deliver here
+          </button>
+        </div>
+        <%} %> 
+        <!--  -->   
+        
+      </div>
+      <!-- add new address -->
+      <% if(addresses.length<=5) {%> 
+      <div id="addNewAddressDiv" class="border w-full lg:w-4/5 px-5 py-3 mt-3">
+        <!--  -->
+        <div class="cursor-pointer font-semibold text-turquoise">
+          Add a new address
+        </div>
+      </div>
+      
+      <!-- address form -->
+      <div id="addNewAddressForm" class="hidden transition-all animate-slide-down border w-full lg:w-4/5 px-5 py-5 mt-3">
+        <!--  -->
+        <!-- <div class="lg:flex gap-20"> -->
+            <form action="" method="post">
+        <div class="">
+          <label for="title" class="block mb-1">Address name</label>
+          <input
+            type="text"
+            value="Address-<%= randomNum %>"
+            autocomplete="additional-name"
+            required
+            id="title"
+            name="title"
+            class="bg-white border block w-4/5 p-1 px-3 focus:outline-none"
+          />
+        </div>
+        <div class="mt-4">
+          <label for="name" class="block mb-1">Full name</label>
+          <input
+            type="text"
+            required
+            id="name"
+            name="name"
+            class="bg-white border block w-4/5 p-1 px-3 focus:outline-none"
+          />
+        </div>
+        <div class="mt-4">
+          <label for="streetAddress" class="block mb-1">Street address</label>
+          <textarea
+            required
+            id="streetAddress"
+            name="streetAddress"
+            rows="3"
+            class="bg-white border block w-4/5 p-1 px-3 focus:outline-none resize-none"
+          ></textarea>
+        </div>
+        <div class="flex">
+          <div class="mt-4">
+            <label for="city" class="block mb-1">Town / City</label>
+            <input
+              type="text"
+              required
+              id="city"
+              name="city"
+              class="bg-white border block w-4/5 p-1 px-3 focus:outline-none"
+            />
+          </div>
+          <div class="mt-4">
+            <label for="pincode" class="block mb-1">Pincode</label>
+            <input
+              type="text"
+              required
+              id="pincode"
+              name="pincode"
+              class="bg-white text-darkGray border block w-4/5 p-1 px-3 focus:outline-none"
+            />
+          </div>
+        </div>
+        <div class="flex">
+          <div class="mt-4">
+            <label for="country" class="block mb-1">Country / Region</label>
+            <input
+              type="text"
+              value="India"
+              readonly
+              required
+              id="country"
+              name="country"
+              class="bg-white text-darkGray border block w-4/5 p-1 px-3 focus:outline-none"
+            />
+          </div>
+          <div class="mt-4">
+            <label for="state" class="block mb-1">State</label>
+            <input
+              type="text"
+              value="Kerala"
+              readonly
+              required
+              id="state"
+              name="state"
+              class="bg-white text-darkGray border block w-4/5 p-1 px-3 focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <label for="phone" class="block mb-1">Phone</label>
+          <input
+            type="tel"
+            required
+            autocomplete="tel-national"
+            id="phone"
+            name="phone"
+            class="bg-white text-darkGray border block w-4/5 p-1 px-3 focus:outline-none"
+          />
+        </div>
+        <div class="flex items-center justify-between mt-10">
+          <button
+            type="reset"
+            id="addressCancelBtn"
+            class="text-turquoise hover:text-teal-300 transition-all"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="bg-turquoise px-7 py-2 font-semibold uppercase hover:bg-teal-300 transition-all"
+          >
+            Save & deliver here
+          </button>
+        </div>
+        
+    </form>
+    </div>
+</div>
+    <% } %>
+    <!-- order summary -->
+    <div class="mt-10">
+      <h1 class="font-semibold uppercase text-lg">Order summary</h1>
+      <div class="border w-full lg:w-4/5 px-5 py-5 mt-5">
+        <!--  -->
+        <% products.forEach(product=>{ %>
+        <div
+          class="mt-5 flex flex-col lg:flex-row justify-between lg:justify-around items-center pb-2 border-lightGray"
+        >
+          <!-- cart item section-1 -->
+          <div class="flex items-center justify-start w-full lg:w-1/2 gap-5">
+            <img
+              class="w-20 lg:w-20 border rounded-lg"
+              src="<%= product.imgUrls[0] %>"
+              alt=""
+            />
+
+            <div class="text-sm text-darkGray"><%= product.productTitle %></div>
+            <div class="text-sm">&times;<%= product.quantity %></div>
+          </div>
+          <input type="hidden" value="<%= product._id %>" />
+          <!-- cart item section2 -->
+          <div
+            class="mt-5 lg:mt-0 flex items-center justify-between lg:justify-end w-full lg:w-1/2"
+          >
+            <!-- total price -->
+            <div class="font-semibold">
+              Total: &#8377;<span class="totalPrice"
+                ><%=
+                product.discount>0?(parseInt(product.productPrice)-parseInt(product.discount))*product.quantity:parseInt(product.productPrice)*product.quantity%></span
+              >.00
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+    <!-- order summary -->
+    <div class="mt-10">
+
+      <h1 class="font-semibold uppercase text-lg">Payment methods</h1>
+      <div class="border w-full lg:w-4/5 px-5 py-5 mt-5 relative">
+        <!--  -->
+        <div
+  id="loading"
+  class="hidden absolute right-0 top-0  bg-darkGray bg-opacity-10 w-full h-full justify-center items-center"
+>
+  <div role="status">
+    <svg
+      aria-hidden="true"
+      class="w-12 h-12 text-white animate-spin fill-turquoise"
+      viewBox="0 0 100 101"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+        fill="currentColor"
+      />
+      <path
+        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+        fill="currentFill"
+      />
+    </svg>
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+        <!--  -->
+        <!-- <form action="/make-payment" method="post"> -->
+          <div>
+            <input type="radio"  id="razorpay" value="razorpay" name="paymentMethod" required />
+            <label for="razorpay">Razorpay</label>
+          </div>
+          <div>
+            <input type="radio" id="paypal" value="paypal" name="paymentMethod" required />
+            <label for="paypal">Paypal</label>
+          </div>
+          <div>
+            <input type="radio" id="cod" value="cod" name="paymentMethod" required />
+            <label for="cod">Cash on Delivery</label>
+          </div>
+          <!--  -->
+          <div>
+            <input type="hidden" name="amount" id="amountInput" value="">
+            <input type="hidden" name="instructions" id="instructions" value="<%= instructions  %>">
+          </div>
+          <!--  -->
+          <div class="flex justify-end mt-5">
+            <button
+              id="rzp-button"
+              class="bg-turquoise hover:bg-teal-300 py-2 px-10 uppercase font-semibold"
+            >
+              Pay &#8377;<span id="paynowBtn">100</span>.00
+            </button>
+          </div>
+        <!-- </form> -->
+      </div>
+    </div>
+  </div>
+
+  <!--  -->
+  <div>
+    <div class="bg-formGray p-5 rounded-xl md:w-96">
+      <h1 class="uppercase font-bold text-lg">PRICE DETAILS</h1>
+
+      <label for="coupon" class="text-sm inline-block my-3">Apply Coupon</label>
+      <div class="flex items-center justify-center">
+        <select class="lg:w-full w-60 p-2 bg-white resize-none focus:outline-none uppercase" name="coupon" id="coupon">
+            <option value="" hidden>Select coupon</option>
+            <% coupons.forEach(coupon=>{ %>
+            <option value="<%= coupon.couponCode %>" data-amount="<%= coupon.amount %>" class="uppercase"><%= coupon.couponCode %></option>
+            <% }) %> 
+        </select>        
+        <button
+          id="applyBtn"
+          class="uppercase py-2 px-5 font-semibold bg-black  hover:bg-veryDarkGray text-white"
+        >
+          apply
+        </button>
+      </div>
+
+      <div class="hidden text-sm mt-3  justify-between text-center transition-all animate-slide-down">
+        <div class="text-darkGray">BCT23 applied</div>
+        <button class="text-turquoise hover:text-teal-300">Remove</button>
+      </div>
+      <!--  -->
+      <div class="flex justify-between items-center mt-4 transition-all animate-slide-down">
+        <div class="tex-xs text-veryDarkGray">Price</div>
+        <div
+          class="text-xl font-bold text-right py-1 w-2/3 bg-transparent focus:outline-none"
+        >
+          &#8377;<span id="subTotalPrice">0</span>.00
+        </div>
+      </div>
+      <!--  -->
+      <div class="flex justify-between items-center transition-all animate-slide-down">
+        <div class="tex-xs whitespace-nowrap text-veryDarkGray">
+          Delivery Charges
+        </div>
+        <div class="text-sm text-turquoise uppercase text-right py-1 w-2/3">
+          Free
+        </div>
+      </div>
+      <!--  -->
+      <div id="discountDiv" class="hidden justify-between items-center transition-all animate-slide-down">
+        <div class="tex-xs text-veryDarkGray">Discount</div>
+        <div
+          class="text-xl font-bold text-right py-1 w-2/3 bg-transparent focus:outline-none"
+        >
+          -&#8377;<span id="discount">0</span>.00
+        </div>
+      </div>
+      <!--  -->
+      <div class="flex justify-between items-center mt-5 transition-all animate-slide-down">
+        <div class="tex-xs whitespace-nowrap text-veryDarkGray">
+          Total payable
+        </div>
+        <div
+          class="text-2xl font-bold text-right py-1 w-2/3 bg-transparent focus:outline-none"
+        >
+          &#8377;<span id="toalPayable">0</span>.00
+        </div>
+      </div>
+      <!--  -->
+      <input type="hidden" name="subtotal" id="subtotal" value="0" />
+      <!-- <button
+          class="uppercase text-lg font-semibold py-3 bg-turquoise hover:bg-teal-300 w-full  my-3 <%#= products.length==0?"bg-gray-400 hover:bg-gray-400":null %> "
+          <%#= products.length==0?"disabled":null %> 
+          type="submit"
+        >
+          Checkout
+        </button> -->
+
+      <div class="text-sm text-darkGray text-center mt-5">
+        <span class="text-turquoise">Shipping</span> is calculated at checkout.
+      </div>
+    </div>
+  </div>
+</section>

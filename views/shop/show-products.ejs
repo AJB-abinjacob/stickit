@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <%- include("../partials/user-head") %>    
-    <script defer src="/js/ajax/ajax-add.js"></script>
+    <%- include("../partials/user-head") %>
+    <script defer src="/js/ajax-add.js"></script>
   </head>
   <body>
     <%- include("./layouts/navbar") %>
-    <main>
+    <main>      
       <!--  -->
       <% if(category){ %>
       <!-- category -->
@@ -16,9 +16,54 @@
       <!-- category -->
       <%- include("./components/product/search-head") %>
       <!--  -->
-      <% } %>
+      <% } %>      
       <!-- product list -->
       <%- include("./components/product/product-list") %>
+
+      <% if(products.length != 0){ %> 
+      <!-- pagination -->
+      <div class="flex justify-between flex-col items-center mt-5 px-20">  
+        <div class="text-darkGray text-sm">SHOWING <%=skip+1||1%>-<%=currentPage==lastPage||lastPage==1?totalProducts:skip+limit%> OF <%=totalProducts%></div>
+        <nav aria-label="Page navigation example" class="mt-5">
+          <ul class="flex list-style-none justify-center flex-wrap">            
+            <% if(lastPage!=1){ %> 
+              <li class="page-item rounded-lg text-black <%= !currentPage?" bg-lightGray ":null %> ">
+                <% if(category){ %> 
+                <a
+                class="<%= !currentPage?" text-black ":null %> page-link relative block py-1.5 px-3 border-0 bg-transparent outline-none transition-all duration-300 rounded-lg text-darkGray hover:text-black hover:bg-lightGray focus:shadow-none"
+                href="<%= category=='SHOP'?'/shop':`/category/${category}` %>">
+                1
+              </a>
+              <% }else if(query){ %>
+                <a
+                class="<%= !currentPage?" text-black ":null %> page-link relative block py-1.5 px-3 border-0 bg-transparent outline-none transition-all duration-300 rounded-lg text-darkGray hover:text-black hover:bg-lightGray focus:shadow-none"
+                href="/search?search=<%= query %>">
+                1
+              </a>
+              <% } %> 
+            </li>        
+            <% } %> 
+            <% for(i=2;i<=lastPage;i++){%>
+              <li class="page-item rounded-lg <%=currentPage==i?"bg-lightGray ":null %>">
+                <% if(category){ %> 
+                <a
+                  class="<%= currentPage==i?"text-black":null %> page-link relative block py-1.5 px-3 border-0 bg-transparent outline-none transition-all duration-300 rounded-lg text-darkGray hover:text-black hover:bg-lightGray focus:shadow-none"
+                  href="<%= category=='SHOP'?`/shop?page=${i}`:`/category/${category}?page=${i}` %>">
+                  <%= i %> 
+                </a>
+                <% }else if(query){ %>
+                <a
+                  class="<%= currentPage==i?"text-black":null %> page-link relative block py-1.5 px-3 border-0 bg-transparent outline-none transition-all duration-300 rounded-lg text-darkGray hover:text-black hover:bg-lightGray focus:shadow-none"
+                  href="/search?search=<%= query%>&page=<%= i %>">
+                  <%= i %> 
+                </a>
+                <% } %> 
+              </li>
+            <% } %>            
+          </ul>
+        </nav>
+      </div>
+      <% } %> 
     </main>
     <!-- pre-footer -->
     <%- include("./layouts/pre-footer") %>

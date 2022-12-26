@@ -31,10 +31,22 @@ class Coupon {
       .find({ deleted: { $ne: true } })
       .sort({ createdOn: -1 })
       .toArray()
-      .then((coupons) => coupons)
-      .catch((err) => {
-        console.log(err)
-      })
+  }
+
+  static fetchByCouponCode (couponCode) {
+    const db = getDb()
+    return db
+      .collection('coupons')
+      .findOne({ couponCode })
+  }
+
+  static fetchActive () {
+    const db = getDb()
+    return db
+      .collection('coupons')
+      .find({ active: true, deleted: { $ne: true } })
+      .sort({ createdOn: -1 })
+      .toArray()
   }
 
   static update (id, data) {

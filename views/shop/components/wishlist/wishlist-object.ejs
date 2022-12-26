@@ -8,84 +8,69 @@
 
     <!-- cart items -->
     <div class="mt-10">
+      <% if(products.length==0){ %>
+        <div class="text-center flex flex-col justify-center items-center">
+          <lottie-player
+            src="https://lottie.host/6600106c-7ff4-4a4a-815e-9351c8008cc3/xfYXuaFiZw.json"
+            background="transparent"
+            speed="1"          
+            style="height: 220px;"
+            loop
+            autoplay
+          ></lottie-player>
+          <h1 class="font-semibold mt-3 text-xl">Your wishlist is empty</h1>
+          <a class="text-turquoise block text-sm mt-3 hover:underline" href="/"
+            >Go add some stickers</a
+          >
+        </div>
+        <% } %>
+      <% products.forEach(product=>{ %>
       <!-- item -->
       <div
         class="mt-5 lg:ml-12 flex flex-col lg:flex-row justify-between lg:justify-around items-center border-b pb-4 border-lightGray"
       >
         <!-- cart item section-1 -->
         <div class="flex items-center justify-start w-full lg:w-1/2 gap-5">
-          <img
-            class="w-20 lg:w-28 border rounded-lg"
-            src="https://res.cloudinary.com/dyc3koszi/image/upload/v1670492181/product_images/ohrvvfg3riqxajvzsq3o.webp"
-            alt=""
-          />
+          <a href="/product/<%= product._id %>">
+            <img
+              class="w-20 lg:w-28 border rounded-lg hover:scale-105 transition-all"
+              src="<%= product.imgUrls[0] %>"
+              alt=""
+            />
+          </a>
           <div
-            class="flex flex-col lg:flex-row justify-between w-full lg:items-center gap-3 lg:gap-10"
+          class="flex flex-col lg:flex-row justify-between w-full lg:items-center gap-3 lg:gap-10"
           >
-            <div class="text-sm text-darkGray max-w-xs">
-              Stay Focussed Stay Focussed Stay Focussed Stay Focussed Sticker
+            <a href="/product/<%= product._id %>">
+              <div class="text-darkGray max-w-xs hover:text-turquoise"> 
+                <%= product.productTitle %>
+              </div>
+            </a>
+            <div class="text-xs <%= product.stock>0?'text-turquoise':'text-red-500' %>">
+              <%= product.stock>0?"IN STOCK":"OUT OF STOCK" %>
             </div>
-            <div class="text-xs text-turquoise">IN STOCK</div>
           </div>
         </div>
         <!-- cart item section2 -->
         <div
           class="mt-5 lg:mt-0 flex items-center justify-between lg:justify-around w-full lg:w-1/2"
         >
-          <div class="text-lg lg:text-xl font-semibold">&#8377;29.00</div>
-          <!-- add to cart -->
-          <button
-            class="bg-turquoise hover:bg-teal-300 uppercase font-semibold px-3 py-2"
-          >
-            add to cart
-          </button>
-          <!-- delete -->
-          <form action="/remove-from-cart" method="post">
-            <button type="submit">
-              <i class="bi bi-trash text-lg text-darkRed"></i>
-            </button>
-          </form>
-        </div>
-      </div>
-      <!-- item -->
-      <div
-        class="mt-5 lg:ml-12 flex flex-col lg:flex-row justify-between lg:justify-around items-center border-b pb-4 border-lightGray"
-      >
-        <!-- cart item section-1 -->
-        <div class="flex items-center justify-start w-full lg:w-1/2 gap-5">
-          <img
-            class="w-20 lg:w-28 border rounded-lg"
-            src="https://res.cloudinary.com/dyc3koszi/image/upload/v1670492181/product_images/ohrvvfg3riqxajvzsq3o.webp"
-            alt=""
-          />
-          <div
-            class="flex flex-col lg:flex-row justify-between w-full lg:items-center gap-3 lg:gap-10"
-          >
-            <div class="text-sm text-darkGray max-w-xs">
-              Stay Focussed Sticker
-            </div>
-            <div class="text-xs text-turquoise">IN STOCK</div>
+          <div class="text-lg lg:text-xl font-semibold">
+            &#8377;<%= product.productPrice-product.discount %>.00
           </div>
-        </div>
-        <!-- cart item section2 -->
-        <div
-          class="mt-5 lg:mt-0 flex items-center justify-between lg:justify-around w-full lg:w-1/2"
-        >
-          <div class="text-lg lg:text-xl font-semibold">&#8377;29.00</div>
           <!-- add to cart -->
           <button
-            class="bg-turquoise hover:bg-teal-300 uppercase font-semibold px-3 py-2"
+            class="addToCartBtn <%= product.stock==0?'bg-gray-400 hover:bg-gray-400':'bg-turquoise hover:bg-teal-300' %> uppercase font-semibold px-3 py-2"
+            <%= product.stock==0?'disabled':null %>
           >
             add to cart
           </button>
-          <!-- delete -->
-          <form action="/remove-from-cart" method="post">
-            <button type="submit">
-              <i class="bi bi-trash text-lg text-darkRed"></i>
-            </button>
-          </form>
+          <input type="hidden" value="<%= product._id %>">
+          <!-- delete -->                    
+          <i class="removeFromWishlist bi bi-trash cursor-pointer text-lg text-darkRed"></i>        
         </div>
       </div>
+      <% }) %>
     </div>
   </div>
 </section>
@@ -95,3 +80,11 @@
     ><i class="bi bi-chevron-double-left"></i> Continue shopping</a
   >
 </section>
+
+<div id="addedToCartAlert" class="hidden justify-center items-center text-center fixed top-28 right-0 left-0">
+  <div class="bg-green-200 text-green-800 py-3 px-5 rounded-lg animate-slide-down transition-all lg:w-1/4">Added to cart</div>
+</div>
+
+<div id="removedFromWishlist" class="hidden justify-center items-center text-center fixed top-28 right-0 left-0">
+  <div class="bg-red-200 text-red-800 py-3 px-5 rounded-lg animate-slide-down transition-all lg:w-1/4">Removed from wishlist</div>
+</div>

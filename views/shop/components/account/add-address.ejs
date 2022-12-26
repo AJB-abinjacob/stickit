@@ -1,110 +1,99 @@
-<div class="mt-10 lg:mt-0 lg:w-2/5">
-  <form action="/login" method="post" class="">
+<div class="mt-10 mb-28 lg:mt-0 lg:w-2/5">
+  <form action="/add-address" method="post" class="">
     <div class="lg:flex gap-20">
-      <!-- <div class="hidden lg:block w-20 h-20 mx-auto"></div> -->
-      <div>
-        <div class="">
-          <label for="addressName" class="block mb-1">Address name</label>
-          <input
-            type="text"
-            value="Address-01"
-            autofocus
-            required
-            id="addressName"
-            name="addressName"
-            class="bg-white border block w-full p-1 px-3 focus:outline-none"
-          />
-        </div>
-        <div class="mt-4">
-          <label for="name" class="block mb-1">Full name</label>
-          <input
-            type="text"
-            required
-            id="name"
-            name="name"
-            class="bg-white border block w-full p-1 px-3 focus:outline-none"
-          />
-        </div>
-        <div class="mt-4">
-          <label for="country" class="block mb-1">Country / Region</label>
-          <input
-            type="text"
-            value="India"
-            readonly
-            required
-            id="country"
-            name="country"
-            class="bg-white text-darkGray border block w-full p-1 px-3 focus:outline-none"
-          />
-        </div>
-        <div class="mt-4">
-          <label for="streetAddress" class="block mb-1">Street address</label>
-          <textarea
-            required
-            id="streetAddress"
-            name="streetAddress"
-            rows="3"
-            class="bg-white border block w-full p-1 px-3 focus:outline-none resize-none"
-          ></textarea>
-        </div>
-        <div class="mt-4">
-          <label for="city" class="block mb-1">Town / City</label>
-          <input
-            type="text"
-            required
-            id="city"
-            name="city"
-            class="bg-white border block w-full p-1 px-3 focus:outline-none"
-          />
-        </div>
-        <div class="mt-4">
-          <label for="state" class="block mb-1">State</label>
-          <input
-            type="text"
-            value="Kerala"
-            readonly
-            required
-            id="state"
-            name="state"
-            class="bg-white text-darkGray border block w-full p-1 px-3 focus:outline-none"
-          />
-        </div>
-        <div class="mt-4">
-          <label for="pincode" class="block mb-1">Pincode</label>
-          <input
-            type="text"
-            required
-            id="pincode"
-            name="pincode"
-            class="bg-white text-darkGray border block w-full p-1 px-3 focus:outline-none"
-          />
-        </div>
-        <div class="mt-4">
-          <label for="phone" class="block mb-1">Phone</label>
-          <input
-            type="tel"
-            required
-            id="phone"
-            name="phone"
-            class="bg-white text-darkGray border block w-full p-1 px-3 focus:outline-none"
-          />
-        </div>
-        <div class="mt-4">
-          <label for="altPhone" class="block mb-1">Alternate phone</label>
-          <input
-            type="tel"
-            id="altPhone"
-            name="altPhone"
-            class="bg-white text-darkGray border block w-full p-1 px-3 focus:outline-none"
-          />
-        </div>
-        <button
-          type="submit"
-          class="bg-turquoise mt-5 px-7 py-2 font-semibold uppercase hover:bg-teal-300 transition-all"
-        >
-          Change password
-        </button>
+      <div class="">
+        <label for="title" class="block mb-1">Address name</label>
+        <input
+          type="text"
+          value="Address-<%= randomNum %>"
+          autocomplete="additional-name"
+          required
+          id="title"
+          name="title"
+          class="bg-white border block w-full p-1 px-3 focus:outline-none"
+        />
       </div>
+      <div class="mt-4">
+        <label for="name" class="block mb-1">Full name</label>
+        <input
+          type="text"
+          required
+          id="name"
+          name="name"
+          class="bg-white border block w-full p-1 px-3 focus:outline-none"
+        />
+      </div>
+      <div class="mt-4">
+        <label for="country" class="block mb-1">Country / Region</label>
+        <input
+          type="text"
+          value="India"
+          readonly
+          required
+          id="country"
+          name="country"
+          class="bg-white text-darkGray border block w-full p-1 px-3 focus:outline-none"
+        />
+      </div>
+      <div class="mt-4">
+        <label for="streetAddress" class="block mb-1">Street address</label>
+        <textarea
+          required
+          id="streetAddress"
+          name="streetAddress"
+          rows="3"
+          class="bg-white border block w-full p-1 px-3 focus:outline-none resize-none"
+        ></textarea>
+      </div>
+      <div class="mt-4">
+        <label for="city" class="block mb-1">Town / City</label>
+        <input
+          type="text"
+          required
+          id="city"
+          name="city"
+          class="bg-white border block w-full p-1 px-3 focus:outline-none"
+        />
+      </div>
+      <div class="mt-4">
+        <label for="state" class="block mb-1">State</label>
+        <input
+          type="text"
+          value="Kerala"
+          readonly
+          required
+          id="state"
+          name="state"
+          class="bg-white text-darkGray border block w-full p-1 px-3 focus:outline-none"
+        />
+      </div>
+      <div class="mt-4">
+        <label for="pincode" class="block mb-1">Pincode</label>
+        <input
+          type="text"
+          required
+          id="pincode"
+          name="pincode"
+          class="bg-white text-darkGray border block w-full p-1 px-3 focus:outline-none"
+        />
+      </div>
+      <div class="mt-4">
+        <label for="phone" class="block mb-1">Phone</label>
+        <input
+          type="tel"
+          required
+          autocomplete="tel-national"
+          id="phone"
+          name="phone"
+          class="bg-white text-darkGray border block w-full p-1 px-3 focus:outline-none"
+        />
+      </div>
+      <button
+        type="submit"
+        class="bg-turquoise mt-5 px-7 py-2 font-semibold uppercase hover:bg-teal-300 transition-all"
+      >
+        Add Address
+      </button>
     </div>
   </form>
 </div>

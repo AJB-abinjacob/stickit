@@ -1,44 +1,56 @@
 <div>
-  <form action="/login" method="post">
+  <form action="/update-user" method="post">
     <div class="lg:flex gap-20">
-      <div class="my-10 lg:my-0 w-20 h-20 bg-turquoise rounded-full mx-auto">
-        <!-- <input type="file" name="profile" id="profile" class="" /> -->
-      </div>
-      <div>
+      <div
+        class="my-10 lg:my-0 w-20 h-20 bg-turquoise rounded-full mx-auto lg:mx-0"
+      ></div>
+
+      <div class="">
         <div class="">
           <label for="name" class="block mb-1">Full name</label>
           <input
             type="text"
-            value="Umar Muqthar"
+            value="<%= user.name %>"
             required
             id="name"
             name="name"
-            class="bg-white border block w-full p-1 px-3 focus:outline-none"
+            class="bg-white border block w-full md:w-80 p-1 px-3 focus:outline-none"
           />
         </div>
         <div class="mt-4">
           <label for="email" class="block mb-1">Email address</label>
           <input
             type="email"
-            value="umar@gmail.com"
+            value="<%= user.email %>"
             required
             id="email"
             name="email"
-            class="bg-white border block w-full p-1 px-3 focus:outline-none"
+            readonly
+            class="bg-lightGray cursor-default border block w-full p-1 px-3 focus:outline-none"
           />
         </div>
         <div class="mt-4">
           <label for="phone" class="block mb-1">Phone number</label>
           <input
             type="tel"
-            value="9747816722"
+            value="<%= user.phone %>"
             required
             id="phone"
             name="phone"
             readonly
-            class="bg-white border block w-full p-1 px-3 focus:outline-none"
+            class="bg-lightGray cursor-default border block w-full p-1 px-3 focus:outline-none"
           />
         </div>
+        <input type="hidden" name="id" id="id" value="<%= user._id %>" />
+        <!-- <div class="mt-4">
+          <label for="name" class="block mb-1">Profile pic</label>
+          <input
+            type="file"
+            id="profile"
+            name="profile"
+            class="bg-white border block w-full md:w-80 p-1 px-3 focus:outline-none"
+          />
+        </div> -->
         <button
           type="submit"
           class="bg-turquoise mt-5 px-7 py-2 font-semibold uppercase hover:bg-teal-300 transition-all"
@@ -51,11 +63,11 @@
 
   <h1 class="my-16 font-semibold text-lg lg:mt-20 lg:mb-10">Change password</h1>
   <!-- password  -->
-  <form action="/login" method="post" class="">
+  <form action="/update-user" method="post" class="">
     <div class="lg:flex gap-20">
-      <div class="hidden lg:block w-20 h-20 mx-auto"></div>
+      <div class="hidden lg:block w-20 h-20"></div>
       <div>
-        <div class="">
+        <div>
           <label for="currentPassword" class="block mb-1"
             >Current password</label
           >
@@ -89,6 +101,7 @@
             class="bg-white border block w-full p-1 px-3 focus:outline-none"
           />
         </div>
+        <input type="hidden" name="id" id="userId" value="<%= user._id %>" />
         <button
           type="submit"
           class="bg-turquoise mt-5 px-7 py-2 font-semibold uppercase hover:bg-teal-300 transition-all"
@@ -99,3 +112,18 @@
     </div>
   </form>
 </div>
+
+
+<% if(message[0]){ %>
+  <!-- errorMsgBox -->
+  <div
+    id="errorMsgBox"
+    class="animate-slide-down z-20 transition-all w-full fixed top-4 left-0 right-0 flex items-center justify-center"
+  >
+    <div
+      class="text-center bg-lightRed rounded-lg text-darkRed lg:text-lg py-5 px-8 mx-10 max-w-lg"
+    >
+      <%= message[0] %>
+    </div>
+  </div>
+  <% } %>

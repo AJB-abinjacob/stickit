@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/user-head") %>
+    <script defer src="/js/for-checkout.js"></script>
+    <script defer src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  </head>
+  <body>
+    <%- include("./layouts/navbar") %>
+    <main>
+      <!-- checkout-object -->
+      <%- include("./components/checkout/checkout-object") %>
+      <!--  -->
+    </main>
+    <!-- footer -->
+    <%- include("./layouts/footer") %> <%- include("./components/loading") %>
+    <script>
+      let paymentMethod
+      let address
+      let couponCode
+      document.getElementById('razorpay').addEventListener('click', (e) => {
+        paymentMethod = 'razorpay'
+        console.log(paymentMethod)
+      })
+      document.getElementById('paypal').addEventListener('click', (e) => {
+        paymentMethod = 'paypal'
+        console.log(paymentMethod)
+      })
+      document.getElementById('cod').addEventListener('click', (e) => {
+        paymentMethod = 'cod'
+        console.log(paymentMethod)
+      })
+      // address
+      document.querySelectorAll('.addressBtn').forEach((item) => {
+        item.addEventListener('click', () => {
+          address = item.previousElementSibling.value
+        })
+      })
+      // coupon
+      document.getElementById('applyBtn').addEventListener('click', () => {
+        couponCode =
+          document.getElementById('coupon').options[
+            document.getElementById('coupon').selectedIndex
+          ].value
+      })
+      const loading = document.querySelector('#loading')
+      document.getElementById('rzp-button').onclick = async function (e) {
+        e.preventDefault()
+        if (!address) {
+          return
+        }
+        
+        loading.classList.replace('hidden', 'flex')
+
+        const response = await fetch('/create-order', {
+          method: 'post',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            amount: document.getElementById('amountInput').value,
+            paymentMethod,
+            couponCode,
+            address,
+            specialInstruction: document.getElementById('instructions').value
+          })
+        })
+        const orderData = await response.json()
+        if (paymentMethod === 'cod') {
+          location.href="/order-placed-successfully";
+        } else if (paymentMethod === 'razorpay') {
+          const options = {
+            key: 'rzp_test_uTtKLmjGfrIwcj',
+            amount: orderData.amount * 100,
+            currency: 'INR',
+            name: 'STICKIT LLP',
+            description: 'Test Transaction',
+            image:
+              'https://res.cloudinary.com/dyc3koszi/image/upload/v1671883326/logos/android-chrome-512x512_gsre1v.png',
+            order_id: orderData.id,
+            callback_url: '/verify-payment-razorpay',
+            prefill: {
+              name: 'Rashid K',
+              email: 'rashid.k@gmail.com',
+              contact: '9898989898'
+            },
+            theme: {
+              color: '#2dd4bf'
+            }
+          }
+          const rzp = new Razorpay(options)
+          rzp.open()
+        } else {
+          return
+        }
+      }
+    </script>
+  </body>
+</html>

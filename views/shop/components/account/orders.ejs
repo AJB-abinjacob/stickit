@@ -1,46 +1,64 @@
 <div class="mt-10 lg:mt-0 w-full">
   <!--  -->
+  <% orders.forEach(order=>{ %>
   <div class="border p-5 mb-8 rounded-lg lg:w-3/4">
     <div
-      class="flex flex-col-reverse lg:flex-row justify-between text-darkGray gap-3 lg:gap-10"
+      class="flex flex-col-reverse lg:flex-row justify-between text-darkGray gap-3 lg:gap-10 mb-5"
     >
-      <h1 class="text-sm">ORDER ID #9023-4356-8723</h1>
+      <h1 class="text-sm">ORDER ID #<%= order._id %></h1>
       <div class="text-xs lg:text-sm flex items-center gap-1">
+        <% if(order.status==='pending'){ %>
         <div class="bg-yellow-400 rounded-full w-2 h-2"></div>
-        <div>Shipped</div>
+        <% }else if(order.status==='processing'){ %>
+        <div class="bg-blue-400 rounded-full w-2 h-2"></div>
+        <% }else if(order.status==='delivered'){%>
+        <div class="bg-green-500 rounded-full w-2 h-2"></div>
+        <% }else if(order.status==='cancelled'){ %>
+        <div class="bg-red-500 rounded-full w-2 h-2"></div>
+        <% } %>
+        <div class="capitalize"><%= order.status %></div>
       </div>
     </div>
     <!--  -->
+    <% order.products.forEach(product=>{ %>
     <div
-      class="mt-5 text-sm border-t flex flex-col lg:flex-row lg:items-center justify-between gap-5 text-darkGray"
+      class="text-sm border-t flex flex-col lg:flex-row lg:items-center justify-between gap-5 text-darkGray"
     >
-      <div class="flex items-center justify-between gap-5 lg:gap-10">
-        <img
-          src="https://res.cloudinary.com/dyc3koszi/image/upload/v1670492181/product_images/ohrvvfg3riqxajvzsq3o.webp"
-          class="w-12 lg:w-20"
-          alt=""
-        />
-        <h1 class="capitalize max-w-xs">Stay Focussed Sticker</h1>
+      <div class="flex items-center justify-between py-3 gap-5 lg:gap-10">
+        <img src="<%= product.imgUrls[0] %>" class="w-12 lg:w-20" alt="" />
+        <h1 class="capitalize max-w-xs"><%= product.productTitle %></h1>
       </div>
       <div class="flex items-center justify-between gap-5 lg:gap-20">
-        <div>Quantity: 5</div>
-        <form action="/cancel-order" method="post">
-          <button
-            class="border border-black text-black hover:bg-lightGray uppercase text-xs font-semibold py-2 px-7"
-          >
-            cancel
-          </button>
-        </form>
+        <div>Quantity: <%= product.quantity %></div>
       </div>
     </div>
-
+    <% }) %>
     <!--  -->
-
+    <% if(order.status=='processing' || order.status=='pending' ){ %>
+    <form
+      action="/cancel-order/<%= order._id %>"
+      method="post"
+      class="border-t pt-5 flex justify-end"
+    >
+      <button
+        class="border border-black text-black hover:bg-lightGray uppercase text-xs font-semibold py-2 px-7"
+      >
+        cancel
+      </button>
+    </form>
+    <% } %>
     <div
       class="mt-5 pt-4 border-t text-darkGray flex flex-col lg:flex-row lg:items-center justify-between gap-1 text-sm"
     >
-      <div>Order placed on 06-Sep-2022</div>
-      <div class="text-base font-semibold">Total: $149.00</div>
+      <!-- 06-Sep-2022 -->
+      <div>
+        Order placed on <%= new
+        Date(order.createdOn).toISOString().replace(/T.*/,'').split('-').reverse().join('-')%>
+      </div>
+      <div class="text-base font-semibold">
+        Total: &#8377;<%= order.payment.amountPayable %>.00
+      </div>
     </div>
   </div>
+  <% }) %>
 </div>

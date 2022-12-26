@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include("../partials/user-head") %>
+  </head>
+  <body>
+    <%- include("./layouts/navbar") %>
+    <script
+      defer
+      src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
+    ></script>
+    <main>
+      <section class="flex flex-col justify-center items-center mt-10 mb-20 relative">
+        <lottie-player
+          src="https://assets9.lottiefiles.com/packages/lf20_lg6lh7fp.json"
+          background="transparent"
+          speed="1"
+          style="width: 300px; height: 300px"
+          autoplay
+          class="absolute top-0"
+        ></lottie-player>
+        <lottie-player
+          src="https://assets1.lottiefiles.com/packages/lf20_6sk53u8z.json"
+          background="transparent"
+          speed="1"
+          style="width: 300px; height: 300px"
+          autoplay
+        ></lottie-player>
+
+        <h1 class="font-semibold text-xl text-veryDarkGray">
+          Order Placed Successfully
+        </h1>
+        <a
+          href="/orders"
+          class="inline-block bg-turquoise font-medium py-2 px-5 uppercase mt-5 hover:bg-teal-300 transition-all"
+          >See Orders</a
+        >
+        <a
+          href="/"
+          class="mt-10 text-darkGray hover:text-turquoise hover:underline text-center block"
+          ><i class="bi bi-chevron-double-left"></i> Continue shopping</a
+        >
+      </section>
+    </main>
+    <!-- pre-footer -->
+    <%- include("./layouts/pre-footer") %>
+    <!-- footer -->
+    <%- include("./layouts/footer") %>
+  </body>
+</html>

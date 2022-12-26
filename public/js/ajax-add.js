@@ -44,7 +44,16 @@ async function ajaxAddToWishlist (e) {
   const value = await response.json()
   console.log(value)
   const heartEl = document.createElement('i')
-  heartEl.classList.add('removeFromWishlist', 'bi', 'bi-heart-fill', 'cursor-pointer', 'text-2xl', 'text-red-500', 'hover:text-red-600', 'transition-all', 'animate-slide-down')
+  heartEl.classList.add(
+    'removeFromWishlist',
+    'bi',
+    'bi-heart-fill',
+    'cursor-pointer',
+    'text-2xl',
+    'text-red-500',
+    'hover:text-red-600',
+    'transition-all'
+  )
   heartEl.addEventListener('click', ajaxRemoveFromWishlist)
   e.target.parentNode.replaceChild(heartEl, e.target)
 }
@@ -63,7 +72,16 @@ async function ajaxRemoveFromWishlist (e) {
   const value = await response.json()
   console.log(value)
   const heartOutlineEl = document.createElement('i')
-  heartOutlineEl.classList.add('addToWishlist', 'bi', 'bi-heart', 'cursor-pointer', 'text-2xl', 'hover:text-red-600', 'transition-all', 'animate-slide-down')
+  heartOutlineEl.classList.add(
+    'addToWishlist',
+    'bi',
+    'bi-heart',
+    'cursor-pointer',
+    'text-2xl',
+    'hover:text-red-600',
+    'transition-all',
+    'animate-slide-down'
+  )
   heartOutlineEl.addEventListener('click', ajaxAddToWishlist)
   e.target.parentNode.replaceChild(heartOutlineEl, e.target)
 }

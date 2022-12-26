@@ -31,6 +31,22 @@ class Product {
     return db.collection('products').countDocuments({ deleted: { $ne: true } })
   }
 
+  static countByCategoryId (categoryId) {
+    const db = getDb()
+    return db.collection('products').countDocuments({
+      deleted: { $ne: true },
+      category: ObjectId(categoryId)
+    })
+  }
+
+  static countByValue (value) {
+    const db = getDb()
+    return db.collection('products').countDocuments({
+      deleted: { $ne: true },
+      productTitle: { $regex: value, $options: 'i' }
+    })
+  }
+
   static fetchAll (skip, limit) {
     const db = getDb()
     return db
@@ -39,7 +55,7 @@ class Product {
         { $match: { deleted: { $ne: true } } },
         { $sort: { createdOn: -1 } },
         { $skip: skip || 0 },
-        { $limit: limit || null },
+        { $limit: limit },
         {
           $lookup: {
             from: 'categories',
@@ -57,23 +73,34 @@ class Product {
     return db.collection('products').findOne({ _id: ObjectId(id) })
   }
 
-  static fetchByCategory (id) {
+  static fetchByCategory (id, skip, limit) {
     const db = getDb()
     return db
       .collection('products')
-      .find({ category: ObjectId(id), deleted: { $ne: true } })
-      .sort({ createdOn: -1 })
+      .aggregate([
+        { $match: { category: ObjectId(id), deleted: { $ne: true } } },
+        { $sort: { createdOn: -1 } },
+        { $skip: skip || 0 },
+        { $limit: limit }
+      ])
       .toArray()
   }
 
-  static fetchByValue (value) {
+  static fetchByValue (value, skip, limit) {
     const db = getDb()
     return db
       .collection('products')
-      .find({
-        deleted: { $ne: true },
-        productTitle: { $regex: value, $options: 'i' }
-      })
+      .aggregate([
+        {
+          $match: {
+            deleted: { $ne: true },
+            productTitle: { $regex: value, $options: 'i' }
+          }
+        },
+        { $sort: { createdOn: -1 } },
+        { $skip: skip || 0 },
+        { $limit: limit }
+      ])
       .toArray()
   }
 

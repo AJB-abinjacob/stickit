@@ -52,8 +52,8 @@
       >
       <% } %>
     </div>
-    <form method="post">
-      <!-- quantity input -->
+    <!-- quantity input -->
+    <form action="/buynow" method="post">
       <div class="custom-number-input w-32 mt-5">
         <label
           for="custom-input-number"
@@ -72,10 +72,14 @@
           </button>
           <input
             type="number"
+            id="quantity"
+            name="quantity"
             readonly
-            class="outline-none focus:outline-none text-center w-full font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-700"
-            name="custom-input-number"
             value="1"
+            class="outline-none focus:outline-none text-center w-full font-semibold text-md hover:text-black focus:text-black md:text-basecursor-default flex items-center text-gray-700"
+            min="1"
+            max="10"
+            step="1"
           />
           <button
             data-action="increment"
@@ -88,24 +92,48 @@
       </div>
       <!-- action buttons -->
       <div class="flex flex-col lg:flex-row lg:items-center gap-5 mt-10">
+        <input id="productId" type="hidden" value="<%= product._id %>" />
         <button
-          formaction="/buy-now"
+          type="submit"
+          id="buyNow"
           class="uppercase px-10 py-2 bg-turquoise hover:bg-teal-300 text-black font-semibold"
         >
           Buy now
         </button>
         <div class="flex items-center gap-5">
           <button
-            formaction="/add-to-cart"
+            type="button"
+            id="addToCartBtn"
             class="uppercase px-8 w-full py-2 border hover:bg-lightGray text-black font-semibold"
           >
             add to cart
           </button>
-          <button formaction="/add-to-wishlist">
-            <i class="bi bi-heart text-2xl hover:text-red-500 text-black"></i>
-          </button>
+          <% if(product.isWishlisted){ %>
+          <div>
+            <i
+              id="removeFromWishlistBtn"
+              class="bi bi-heart-fill cursor-pointer text-2xl text-red-500 hover:text-red-600"
+            ></i>
+            <% }else{ %>
+            <i
+              id="addToWishlistBtn"
+              class="bi bi-heart cursor-pointer text-2xl hover:text-red-500"
+            ></i>
+            <% } %>
+          </div>
         </div>
       </div>
     </form>
   </div>
 </section>
+
+<div
+  id="addedToCartAlert"
+  class="hidden justify-center items-center text-center fixed top-28 right-0 left-0"
+>
+  <div
+    class="bg-green-200 text-green-800 py-3 px-5 rounded-lg animate-slide-down transition-all lg:w-1/4"
+  >
+    Added to cart
+  </div>
+</div>
