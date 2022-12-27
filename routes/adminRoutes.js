@@ -2,52 +2,93 @@ const router = require('express').Router()
 const { upload } = require('../utils/multer')
 
 const adminControllers = require('../controllers/adminControllers')
+const adminAuth = require('../auth/adminAuth')
 
-router.get('/', adminControllers.getDashboard)
-router.get('/login', adminControllers.getLogin)
-router.post('/login', adminControllers.postLogin)
-router.post('/logout', adminControllers.postLogout)
+router.get('/', adminAuth.isLoggedIn, adminControllers.getDashboard)
+router.get('/login', adminAuth.isLoggedOut, adminControllers.getLogin)
+router.post('/login', adminAuth.isLoggedOut, adminControllers.postLogin)
+router.post('/logout', adminAuth.isLoggedIn, adminControllers.postLogout)
 
-router.get('/products', adminControllers.getProducts)
+router.get('/products', adminAuth.isLoggedIn, adminControllers.getProducts)
 router.post(
   '/add-product',
+  adminAuth.isLoggedIn,
   upload.array('productImages', 4),
   adminControllers.postAddProduct
 )
 router.post(
   '/edit-product',
+  adminAuth.isLoggedIn,
   upload.array('productImages', 4),
   adminControllers.postEditProduct
 )
-router.post('/delete-product', adminControllers.postDeleteProduct)
+router.post(
+  '/delete-product',
+  adminAuth.isLoggedIn,
+  adminControllers.postDeleteProduct
+)
 
-router.get('/categories', adminControllers.getCategories)
-router.post('/add-category', adminControllers.postAddCategory)
-router.post('/edit-category', adminControllers.postEditCategory)
-router.post('/delete-category', adminControllers.postDeleteCategory)
+router.get('/categories', adminAuth.isLoggedIn, adminControllers.getCategories)
+router.post(
+  '/add-category',
+  adminAuth.isLoggedIn,
+  adminControllers.postAddCategory
+)
+router.post(
+  '/edit-category',
+  adminAuth.isLoggedIn,
+  adminControllers.postEditCategory
+)
+router.post(
+  '/delete-category',
+  adminAuth.isLoggedIn,
+  adminControllers.postDeleteCategory
+)
 
-router.get('/orders', adminControllers.getOrders)
-router.post('/update-order-status', adminControllers.postUpdateOrderStatus)
+router.get('/orders', adminAuth.isLoggedIn, adminControllers.getOrders)
+router.post(
+  '/update-order-status',
+  adminAuth.isLoggedIn,
+  adminControllers.postUpdateOrderStatus
+)
 
-router.get('/coupons', adminControllers.getCoupons)
-router.post('/add-coupon', adminControllers.postAddCoupon)
-router.post('/edit-coupon', adminControllers.postEditCoupon)
-router.post('/delete-coupon', adminControllers.postDeleteCoupon)
+router.get('/coupons', adminAuth.isLoggedIn, adminControllers.getCoupons)
+router.post('/add-coupon', adminAuth.isLoggedIn, adminControllers.postAddCoupon)
+router.post(
+  '/edit-coupon',
+  adminAuth.isLoggedIn,
+  adminControllers.postEditCoupon
+)
+router.post(
+  '/delete-coupon',
+  adminAuth.isLoggedIn,
+  adminControllers.postDeleteCoupon
+)
 
-router.get('/banners', adminControllers.getBanners)
+router.get('/banners', adminAuth.isLoggedIn, adminControllers.getBanners)
 router.post(
   '/add-banner',
+  adminAuth.isLoggedIn,
   upload.single('bannerImage'),
   adminControllers.postAddBanner
 )
 router.post(
   '/edit-banner',
+  adminAuth.isLoggedIn,
   upload.single('bannerImage'),
   adminControllers.postEditBanner
 )
-router.post('/delete-banner', adminControllers.postDeleteBanner)
+router.post(
+  '/delete-banner',
+  adminAuth.isLoggedIn,
+  adminControllers.postDeleteBanner
+)
 
-router.get('/customers', adminControllers.getCustomers)
-router.get('/invoice/:orderId', adminControllers.getInvoice)
+router.get('/customers', adminAuth.isLoggedIn, adminControllers.getCustomers)
+router.get(
+  '/invoice/:orderId',
+  adminAuth.isLoggedIn,
+  adminControllers.getInvoice
+)
 
 module.exports = router

@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt')
 const { ObjectId } = require('mongodb')
 
 const cloudinary = require('../utils/cloudinary')
@@ -7,19 +8,37 @@ const Category = require('../models/categoryModel')
 const Coupon = require('../models/couponModel')
 const Banner = require('../models/bannerModel')
 const Order = require('../models/orderModel')
+const Admin = require('../models/adminModel')
 
 const ITEMS_PER_PAGE = 10
 
 exports.getLogin = async (req, res) => {
   try {
-    res.render('admin/login')
+    res.render('admin/login', { message: req.flash('message') })
   } catch (err) {
     console.log(err)
   }
 }
 exports.postLogin = async (req, res) => {
   try {
-    res.redirect('/admin')
+    const { email, password } = req.body
+    const admin = await Admin.findByEmail(email)
+    if (!admin) {
+      req.flash('message', "Admin doesn't exist")
+      return res.redirect('/admin/login')
+    }
+    const passwordMatch = await bcrypt.compare(password, admin.password)
+    if (!passwordMatch) {
+      req.flash('message', 'Wrong password')
+      return res.redirect('/admin/login')
+    }
+    req.session.adminId = admin._id.toString()
+    req.session.save((err) => {
+      if (err) {
+        console.log(err)
+      }
+      res.redirect('/admin')
+    })
   } catch (err) {
     console.log(err)
   }
@@ -27,6 +46,7 @@ exports.postLogin = async (req, res) => {
 
 exports.postLogout = async (req, res) => {
   try {
+    req.session.destroy()
     res.redirect('/admin/login')
   } catch (err) {
     console.log(err)

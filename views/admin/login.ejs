@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <%- include("../partials/admin-head") %>
+    <script defer src="/js/show-msg.js"></script>
   </head>
   <body>
     <main class="flex justify-center items-center h-screen w-full">
@@ -43,5 +44,18 @@
         </form>
       </div>
     </main>
+    <% if(message[0]){ %>
+    <!-- errorMsgBox -->
+    <div
+      id="errorMsgBox"
+      class="animate-slide-down transition-all w-full fixed top-4 left-0 right-0 flex items-center justify-center"
+    >
+      <div
+        class="text-center bg-lightRed rounded-lg text-darkRed lg:text-xl py-5 px-8 mx-10 max-w-lg"
+      >
+        <%= message[0] %>
+      </div>
+    </div>
+    <% } %>
   </body>
 </html>
