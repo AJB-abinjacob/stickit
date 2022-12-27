@@ -93,18 +93,11 @@
       <!-- action buttons -->
       <div class="flex flex-col lg:flex-row lg:items-center gap-5 mt-10">
         <input id="productId" type="hidden" value="<%= product._id %>" />
-        <button
-          type="submit"
-          id="buyNow"
-          class="uppercase px-10 py-2 bg-turquoise hover:bg-teal-300 text-black font-semibold"
-        >
-          Buy now
-        </button>
         <div class="flex items-center gap-5">
           <button
             type="button"
             id="addToCartBtn"
-            class="uppercase px-8 w-full py-2 border hover:bg-lightGray text-black font-semibold"
+            class="uppercase px-8 w-full py-2 <%= product.stock>0?'bg-turquoise hover:bg-teal-300':"bg-gray-400" %> text-black font-semibold"
           >
             add to cart
           </button>

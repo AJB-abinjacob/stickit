@@ -36,20 +36,11 @@
            >
           <div class="hidden justify-center items-center absolute top-10 left-0 right-0">
             <div class="bg-green-200 text-green-800 p-3 rounded-lg animate-slide-down transition-all">Added to cart</div>
-          </div>
-          <div>
-            <button
-              class="uppercase w-full py-2 <%= product.stock>0?'bg-turquoise hover:bg-teal-300':"bg-gray-400" %> text-black font-semibold"
-              type="button"
-              <%= product.stock>0?null:"disabled" %>
-            >
-              Buy now
-            </button>
-          </div>        
+          </div>                  
           <div class="flex items-center justify-between gap-5 mt-3">          
             <div class="w-full">
               <button
-                class="addToCartBtn uppercase w-full py-2 border <%= product.stock>0?'hover:bg-lightGray':"bg-lightGray" %> text-black font-semibold"
+              class="addToCartBtn uppercase w-full py-2 <%= product.stock>0?'bg-turquoise hover:bg-teal-300':"bg-gray-400" %> text-black font-semibold"
                 type="button"
                 <%= product.stock>0?null:"disabled" %>
               >
