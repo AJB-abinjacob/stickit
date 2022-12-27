@@ -8,7 +8,7 @@ class Order {
     this.specialInstruction = specialInstruction
     this.shippingAddress = ObjectId(shippingAddress)
     this.payment = payment
-    this.status = 'pending'
+    this.status = 'processing'
     this.createdOn = new Date()
   }
 
@@ -17,9 +17,64 @@ class Order {
     return db.collection('orders').insertOne(this)
   }
 
-  static fetchAll () {
+  static count () {
     const db = getDb()
-    return db.collection('orders').find().sort({ createdOn: -1 }).toArray()
+    return db.collection('orders').countDocuments({})
+  }
+
+  static fetchAll (skip, limit) {
+    const db = getDb()
+    return db
+      .collection('orders')
+      .aggregate([
+        { $sort: { createdOn: -1 } },
+        { $skip: skip || 0 },
+        { $limit: limit },
+        {
+          $lookup: {
+            from: 'customers',
+            localField: 'shippingAddress',
+            foreignField: 'addresses.id',
+            as: 'customer'
+          }
+        },
+        {
+          $project: {
+            shippingAddress: 1,
+            payment: 1,
+            status: 1,
+            createdOn: 1,
+            customer: 1
+          }
+        }
+      ])
+      .toArray()
+  }
+
+  static fetchById (orderId) {
+    const db = getDb()
+    return db
+      .collection('orders')
+      .aggregate([
+        { $match: { _id: ObjectId(orderId) } },
+        {
+          $lookup: {
+            from: 'customers',
+            localField: 'shippingAddress',
+            foreignField: 'addresses.id',
+            as: 'customer'
+          }
+        },
+        {
+          $lookup: {
+            from: 'products',
+            localField: 'items.productId',
+            foreignField: '_id',
+            as: 'products'
+          }
+        }
+      ])
+      .toArray()
   }
 
   static fetchByUser (userId) {
@@ -41,7 +96,7 @@ class Order {
       .toArray()
   }
 
-  static update (id, data) {
+  static updateOne (id, data) {
     const db = getDb()
     return db.collection('orders').updateOne(
       { _id: ObjectId(id) },

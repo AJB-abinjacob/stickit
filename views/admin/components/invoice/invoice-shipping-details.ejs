@@ -1,53 +1,68 @@
 <div class="flex justify-between items-center">
   <div class="flex gap-3 items-center">
     <div class="font-semibold">STATUS:</div>
+
+    <% if(order.status === 'cancelled'){ %>
+    <div
+      class="text-xs text-darkRed bg-lightRed py-2 px-5 rounded-md uppercase"
+    >
+      cancelled
+    </div>
+    <% } else if(order.status === 'delivered'){ %>
+    <div
+      class="text-xs text-darkGreen bg-lightGreen py-2 px-5 rounded-md uppercase"
+    >
+      delivered
+    </div>
+    <% }else{ %>
     <form action="">
+      <% if(order.status === 'processing'){ %> 
       <select
         id="orderStatus"
         class="bg-lightYellow text-darkYellow text-xs rounded-lg py-2 px-3"
       >
-        <option class="bg-white text-black text-sm" selected value="pending">
-          Pending
-        </option>
-        <option class="bg-white text-black text-sm" value="processing">
+      <% }else if(order.status === 'shipped'){ %>
+        <select
+        id="orderStatus"
+        class="bg-lightBlue text-darkBlue text-xs rounded-lg py-2 px-3"
+      > 
+      <% } %>
+      <% if(order.status === 'processing'){ %> 
+        <option class="bg-white text-black text-sm" value="processing" <%= order.status==='processing'?'selected':null  %> >
           Processing
         </option>
-        <option class="bg-white text-black text-sm" value="shipped">
+        <% } %> 
+        <option class="bg-white text-black text-sm" value="shipped"  <%= order.status==='shipped'?'selected':null  %> >
           Shipped
         </option>
         <option class="bg-white text-black text-sm" value="delivered">
           Delivered
         </option>
-        <option class="bg-white text-black text-sm" value="cancelled">
-          Cancelled
-        </option>
       </select>
     </form>
-    <!-- <div class="text-xs text-darkYellow bg-lightYellow py-2 px-5 rounded-md">
-      Pending
-    </div> -->
+    <% } %>
   </div>
-  <div class="font-semibold">Order #<%= orderId %></div>
+  <div class="font-semibold">Order #<%= order._id %></div>
+  <input type="hidden" name="" id="orderId" value="<%= order._id %>">
 </div>
 <!--  -->
 <div class="mt-20 flex justify-between">
   <div>
     <div class="font-semibold uppercase">DATE</div>
-    <div class="text-sm mt-2">November 25, 2022</div>
+    <div class="text-sm mt-2"><%= new Date(order.createdOn).toDateString()  %></div>
   </div>
   <div class="w-1/3">
     <div class="font-semibold uppercase">ADDRESS</div>
     <div class="text-sm mt-2">
-      TC 35/900, Muqthar Manzil, Puthenroad Jn, Vallakkadavu PO,
-      Thiruvananthapuram, Kerala <br />
-      Pin: 695008
+      <%= order.shippingAddress.streetAddress %><br/>
+      <%= order.shippingAddress.city %>, <%= order.shippingAddress.state %> <br />
+      Pin: <%= order.shippingAddress.pincode %>
     </div>
   </div>
   <div>
     <div class="font-semibold uppercase">PHONE</div>
     <div class="text-sm mt-2">
-      9747816722 <br />
-      7736633122
+      +91 <%= order.shippingAddress.phone %>      
     </div>
   </div>
 </div>

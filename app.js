@@ -5,8 +5,13 @@ const nocache = require('nocache')
 const session = require('express-session')
 const flash = require('connect-flash')
 const mongoConnect = require('./utils/database').mongoConnect
+const MongoDBStore = require('connect-mongodb-session')(session)
 require('dotenv').config()
 const app = express()
+const store = new MongoDBStore({
+  uri: process.env.MONGODB_URI,
+  collection: 'sessions'
+})
 
 // routes
 const adminRoutes = require('./routes/adminRoutes')
@@ -19,12 +24,13 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use(nocache())
 app.use(
   session({
-    secret: 'secret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
-    }
+    saveUninitialized: false,
+    store
+    // cookie: {
+    //   maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+    // }
   })
 )
 app.use(flash())

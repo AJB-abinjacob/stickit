@@ -1,13 +1,14 @@
 /* eslint-disable array-callback-return */
 const bcrypt = require('bcrypt')
-
 const { ObjectId } = require('mongodb')
+
 const Customer = require('../models/customerModel')
 const Product = require('../models/productModel')
 const Category = require('../models/categoryModel')
 const Coupon = require('../models/couponModel')
-const razorpay = require('../utils/razorpay')
 const Order = require('../models/orderModel')
+
+const razorpay = require('../utils/razorpay')
 
 const ITEMS_PER_PAGE = 1
 
@@ -32,7 +33,21 @@ exports.postLogin = async (req, res) => {
       req.flash('message', 'Wrong password')
       return res.redirect('/login')
     }
-    // add session here
+    req.session.userId = customer._id.toString()
+    req.session.save((err) => {
+      if (err) {
+        console.log(err)
+      }
+      res.redirect('/')
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+exports.postLogout = async (req, res) => {
+  try {
+    req.session.destroy()
     res.redirect('/')
   } catch (err) {
     console.log(err)
@@ -123,21 +138,24 @@ exports.getResetPassword = async (req, res) => {
 
 exports.getHome = async (req, res) => {
   try {
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const categories = await Category.fetchAll()
     const wishlistArray = await Customer.fetchWishlist(userId)
-    const wishlist = wishlistArray[0].wishlist
     const recentlyAddedProducts = await Product.fetchAll(0, 4)
-    recentlyAddedProducts.forEach((product) => {
-      wishlist.forEach((wishlistItem) => {
-        if (product._id.toString() === wishlistItem.toString()) {
-          product.isWishlisted = true
-        }
+    if (wishlistArray && wishlistArray.length > 0) {
+      const wishlist = wishlistArray[0].wishlist
+      recentlyAddedProducts.forEach((product) => {
+        wishlist.forEach((wishlistItem) => {
+          if (product._id.toString() === wishlistItem.toString()) {
+            product.isWishlisted = true
+          }
+        })
       })
-    })
+    }
     res.render('shop/home', {
       products: recentlyAddedProducts,
-      categories
+      categories,
+      userId
     })
   } catch (err) {
     console.log(err)
@@ -146,7 +164,7 @@ exports.getHome = async (req, res) => {
 
 exports.getShop = async (req, res) => {
   try {
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const category = 'SHOP'
     const { page } = req.query
     const skip = (page - 1) * ITEMS_PER_PAGE || 0
@@ -154,17 +172,20 @@ exports.getShop = async (req, res) => {
     const totalProducts = await Product.count()
     const categories = await Category.fetchAll()
     const wishlistArray = await Customer.fetchWishlist(userId)
-    const wishlist = wishlistArray[0].wishlist
     const products = await Product.fetchAll(skip, limit)
-    products.forEach((product) => {
-      wishlist.forEach((wishlistItem) => {
-        if (product._id.toString() === wishlistItem.toString()) {
-          product.isWishlisted = true
-        }
+    if (wishlistArray && wishlistArray.length > 0) {
+      const wishlist = wishlistArray[0].wishlist
+      products.forEach((product) => {
+        wishlist.forEach((wishlistItem) => {
+          if (product._id.toString() === wishlistItem.toString()) {
+            product.isWishlisted = true
+          }
+        })
       })
-    })
+    }
     res.render('shop/show-products', {
       category,
+      userId,
       categories,
       products,
       totalProducts,
@@ -181,18 +202,19 @@ exports.getShop = async (req, res) => {
 
 exports.getProduct = async (req, res) => {
   try {
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const categories = await Category.fetchAll()
     const product = await Product.fetchById(req.params.id)
     const wishlistArray = await Customer.fetchWishlist(userId)
-    const wishlist = wishlistArray[0].wishlist
-    console.log(wishlist)
-    wishlist.forEach((wishlistItem) => {
-      if (product._id.toString() === wishlistItem.toString()) {
-        product.isWishlisted = true
-      }
-    })
-    res.render('shop/product', { product, categories })
+    if (wishlistArray && wishlistArray.length > 0) {
+      const wishlist = wishlistArray[0].wishlist
+      wishlist.forEach((wishlistItem) => {
+        if (product._id.toString() === wishlistItem.toString()) {
+          product.isWishlisted = true
+        }
+      })
+    }
+    res.render('shop/product', { userId, product, categories })
   } catch (err) {
     console.log(err)
   }
@@ -200,7 +222,7 @@ exports.getProduct = async (req, res) => {
 exports.getProductsByCategory = async (req, res) => {
   try {
     let query // need undefined value
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const { category } = req.params
     const { page } = req.query
     const skip = (page - 1) * ITEMS_PER_PAGE || 0
@@ -217,15 +239,18 @@ exports.getProductsByCategory = async (req, res) => {
       const totalProducts = await Product.countByCategoryId(categoryExist._id)
       products = await Product.fetchByCategory(categoryExist._id, skip, limit)
       const wishlistArray = await Customer.fetchWishlist(userId)
-      const wishlist = wishlistArray[0].wishlist
-      products.forEach((product) => {
-        wishlist.forEach((wishlistItem) => {
-          if (product._id.toString() === wishlistItem.toString()) {
-            product.isWishlisted = true
-          }
+      if (wishlistArray && wishlistArray.length > 0) {
+        const wishlist = wishlistArray[0].wishlist
+        products.forEach((product) => {
+          wishlist.forEach((wishlistItem) => {
+            if (product._id.toString() === wishlistItem.toString()) {
+              product.isWishlisted = true
+            }
+          })
         })
-      })
+      }
       return res.render('shop/show-products', {
+        userId,
         category,
         query,
         categories,
@@ -239,6 +264,7 @@ exports.getProductsByCategory = async (req, res) => {
       })
     }
     res.render('shop/show-products', {
+      userId,
       category,
       categories,
       products
@@ -250,7 +276,7 @@ exports.getProductsByCategory = async (req, res) => {
 exports.getProductsBySearch = async (req, res) => {
   try {
     let category // need undefined value
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const query = req.query.search
     const { page } = req.query
     const skip = (page - 1) * ITEMS_PER_PAGE || 0
@@ -259,16 +285,19 @@ exports.getProductsBySearch = async (req, res) => {
     const categories = await Category.fetchAll()
     const products = await Product.fetchByValue(query, skip, limit)
     const wishlistArray = await Customer.fetchWishlist(userId)
-    const wishlist = wishlistArray[0].wishlist
-    products.forEach((product) => {
-      wishlist.forEach((wishlistItem) => {
-        if (product._id.toString() === wishlistItem.toString()) {
-          product.isWishlisted = true
-        }
+    if (wishlistArray && wishlistArray.length > 0) {
+      const wishlist = wishlistArray[0].wishlist
+      products.forEach((product) => {
+        wishlist.forEach((wishlistItem) => {
+          if (product._id.toString() === wishlistItem.toString()) {
+            product.isWishlisted = true
+          }
+        })
       })
-    })
+    }
 
     res.render('shop/show-products', {
+      userId,
       category,
       query,
       categories,
@@ -287,11 +316,11 @@ exports.getProductsBySearch = async (req, res) => {
 
 exports.getWishlist = async (req, res) => {
   try {
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const categories = await Category.fetchAll()
     const wishlist = await Customer.fetchWishlistItems(userId)
     const products = wishlist[0].products
-    res.render('shop/wishlist', { categories, products })
+    res.render('shop/wishlist', { userId, categories, products })
   } catch (err) {
     console.log(err)
   }
@@ -299,7 +328,7 @@ exports.getWishlist = async (req, res) => {
 
 exports.addToWishlist = async (req, res) => {
   try {
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const productId = req.params.id
     await Customer.addToWishlist(userId, ObjectId(productId))
     res.json('added to wishlist')
@@ -309,7 +338,7 @@ exports.addToWishlist = async (req, res) => {
 }
 exports.removeFromWishlist = async (req, res) => {
   try {
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const productId = req.params.id
     await Customer.removeFromWishlist(userId, ObjectId(productId))
     res.json('removed from wishlist')
@@ -320,7 +349,7 @@ exports.removeFromWishlist = async (req, res) => {
 
 exports.getCart = async (req, res) => {
   try {
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const categories = await Category.fetchAll()
     const cartArray = await Customer.fetchCartItems(userId)
     cartArray[0].products.forEach((product) => {
@@ -331,15 +360,15 @@ exports.getCart = async (req, res) => {
       })
     })
     const products = cartArray[0].products
-    res.render('shop/cart', { categories, products })
+    res.render('shop/cart', { userId, categories, products })
   } catch (err) {
     console.log(err)
   }
 }
 
-exports.addToCart = async (req, res) => {
+exports.postAddToCart = async (req, res) => {
   try {
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const product = {
       productId: ObjectId(req.params.id),
       quantity: parseInt(req.body.quantity)
@@ -352,7 +381,7 @@ exports.addToCart = async (req, res) => {
 }
 exports.removeFromCart = async (req, res) => {
   try {
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const { id } = req.params
     await Customer.removeFromCart(userId, id)
     res.redirect('/cart')
@@ -363,7 +392,7 @@ exports.removeFromCart = async (req, res) => {
 
 exports.decrementQuantity = async (req, res) => {
   try {
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const { id } = req.params
     await Customer.decrementQuantity(userId, id)
     res.json('quantity-decremented')
@@ -375,7 +404,7 @@ exports.decrementQuantity = async (req, res) => {
 exports.postCheckout = async (req, res) => {
   try {
     const { instructions } = req.body
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const randomNum = Math.floor(Math.random() * 100000000)
     const categories = await Category.fetchAll()
     const user = await Customer.findById(userId)
@@ -398,6 +427,7 @@ exports.postCheckout = async (req, res) => {
     })
     const products = cartArray[0].products
     res.render('shop/checkout', {
+      userId,
       categories,
       user: user[0],
       randomNum,
@@ -413,7 +443,7 @@ exports.postCheckout = async (req, res) => {
 
 exports.postCreateOrder = async (req, res) => {
   try {
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const { paymentMethod, amount, address, specialInstruction, couponCode } =
       req.body
     let coupon
@@ -463,7 +493,7 @@ exports.postCreateOrder = async (req, res) => {
 
 exports.postRzpVerifyPayment = async (req, res) => {
   try {
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const rzpPaymentId = req.body.razorpay_payment_id
     if (rzpPaymentId) {
       await Customer.clearCart(userId)
@@ -476,8 +506,9 @@ exports.postRzpVerifyPayment = async (req, res) => {
 
 exports.getOrderPlacedSuccessfully = async (req, res) => {
   try {
+    const userId = req.session.userId
     const categories = await Category.fetchAll()
-    res.render('shop/order-placed', { categories })
+    res.render('shop/order-placed', { userId, categories })
   } catch (err) {
     console.log(err)
   }
@@ -485,10 +516,11 @@ exports.getOrderPlacedSuccessfully = async (req, res) => {
 
 exports.getAccount = async (req, res) => {
   try {
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const user = await Customer.findById(userId)
     const categories = await Category.fetchAll()
     res.render('shop/account', {
+      userId,
       path: '/account',
       categories,
       user: user[0],
@@ -535,20 +567,31 @@ exports.postUpdateUser = async (req, res) => {
 
 exports.getAddresses = async (req, res) => {
   try {
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const addressArray = await Customer.fetchAdresses(userId)
     const addresses = addressArray[0].addresses || []
     const categories = await Category.fetchAll()
-    res.render('shop/account', { path: '/addresses', categories, addresses })
+    res.render('shop/account', {
+      userId,
+      path: '/addresses',
+      categories,
+      addresses
+    })
   } catch (err) {
     console.log(err)
   }
 }
 exports.getAddAddress = async (req, res) => {
   try {
+    const userId = req.session.userId
     const randomNum = Math.floor(Math.random() * 100000000)
     const categories = await Category.fetchAll()
-    res.render('shop/account', { path: '/add-address', categories, randomNum })
+    res.render('shop/account', {
+      userId,
+      path: '/add-address',
+      categories,
+      randomNum
+    })
   } catch (err) {
     console.log(err)
   }
@@ -556,7 +599,7 @@ exports.getAddAddress = async (req, res) => {
 
 exports.postAddAddress = async (req, res) => {
   try {
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const address = req.body
     address.id = new ObjectId()
     await Customer.addAddress(userId, address)
@@ -569,7 +612,7 @@ exports.postAddAddress = async (req, res) => {
 }
 exports.getOrders = async (req, res) => {
   try {
-    const userId = '63986df5de30499b024a4c94'
+    const userId = req.session.userId
     const categories = await Category.fetchAll()
     const orders = await Order.fetchByUser(userId)
     orders.forEach((order) => {
@@ -581,7 +624,7 @@ exports.getOrders = async (req, res) => {
         })
       })
     })
-    res.render('shop/account', { path: '/orders', categories, orders })
+    res.render('shop/account', { userId, path: '/orders', categories, orders })
   } catch (err) {
     console.log(err)
   }
@@ -598,8 +641,9 @@ exports.postCancelOrder = async (req, res) => {
 
 exports.get404 = async (req, res) => {
   try {
+    const userId = req.session.userId
     const categories = await Category.fetchAll()
-    res.render('shop/404', { categories })
+    res.render('shop/404', { userId, categories })
   } catch (err) {
     console.log(err)
   }

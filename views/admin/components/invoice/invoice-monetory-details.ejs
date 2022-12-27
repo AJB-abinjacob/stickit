@@ -1,18 +1,24 @@
 <div class="mt-10 flex justify-between">
   <div>
     <div class="font-semibold uppercase">PAYMENT METHOD</div>
-    <div class="text-sm mt-2">Razorpay</div>
+    <div class="text-xs mt-2 uppercase"><%= order.payment.paymentMethod %></div>
   </div>
   <div>
     <div class="font-semibold uppercase">SHIPPING COST</div>
-    <div class="text-sm mt-2">Free</div>
+    <div class="text-xs mt-2 capitalize">
+      <%= order.payment.shippingCharge %>
+    </div>
   </div>
   <div>
     <div class="font-semibold uppercase">DISCOUNT</div>
-    <div class="text-sm font-semibold mt-2">-&#8377;29.00</div>
+    <div class="text-sm font-semibold mt-2">
+      -&#8377;<%= order.payment.discount %>.00
+    </div>
   </div>
   <div>
     <div class="font-semibold uppercase">TOTAL AMOUNT</div>
-    <div class="text-2xl text-turquoise font-bold mt-2">&#8377;116.00</div>
+    <div class="text-2xl text-turquoise font-bold mt-2">
+      &#8377;<%= order.payment.amountPayable %>.00
+    </div>
   </div>
 </div>

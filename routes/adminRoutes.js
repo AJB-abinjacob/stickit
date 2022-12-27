@@ -27,6 +27,7 @@ router.post('/edit-category', adminControllers.postEditCategory)
 router.post('/delete-category', adminControllers.postDeleteCategory)
 
 router.get('/orders', adminControllers.getOrders)
+router.post('/update-order-status', adminControllers.postUpdateOrderStatus)
 
 router.get('/coupons', adminControllers.getCoupons)
 router.post('/add-coupon', adminControllers.postAddCoupon)

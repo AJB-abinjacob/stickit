@@ -6,6 +6,7 @@ const Product = require('../models/productModel')
 const Category = require('../models/categoryModel')
 const Coupon = require('../models/couponModel')
 const Banner = require('../models/bannerModel')
+const Order = require('../models/orderModel')
 
 const ITEMS_PER_PAGE = 10
 
@@ -175,7 +176,48 @@ exports.postDeleteCategory = async (req, res) => {
 
 exports.getOrders = async (req, res) => {
   try {
-    res.render('admin/orders', { path: '/orders' })
+    const { page } = req.query
+    const skip = (page - 1) * ITEMS_PER_PAGE || 0
+    const limit = ITEMS_PER_PAGE
+    const totalOrders = await Order.count()
+    const orders = await Order.fetchAll(skip, limit)
+    orders.forEach((order) => {
+      order.customer[0].addresses.forEach((address) => {
+        if (address.id.toString() === order.shippingAddress.toString()) {
+          order.shippingAddress = address
+          delete order.customer
+          delete order.items
+        }
+      })
+    })
+
+    console.log(orders)
+    res.render('admin/orders', {
+      path: '/orders',
+      orders,
+      totalOrders,
+      skip,
+      limit,
+      page,
+      currentPage: page,
+      lastPage: Math.ceil(totalOrders / limit)
+    })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+exports.postUpdateOrderStatus = async (req, res) => {
+  try {
+    const { id, status } = req.body
+    let data
+    if (status === 'delivered') {
+      data = { status, deliveredOn: new Date() }
+    } else {
+      data = { status }
+    }
+    await Order.updateOne(id, data)
+    res.json('order status updated')
   } catch (err) {
     console.log(err)
   }
@@ -183,7 +225,23 @@ exports.getOrders = async (req, res) => {
 exports.getInvoice = async (req, res) => {
   try {
     const orderId = req.params.orderId
-    res.render('admin/invoice', { path: '/orders', orderId })
+    const order = await Order.fetchById(orderId)
+    order[0].customer[0].addresses.forEach((address) => {
+      if (address.id.toString() === order[0].shippingAddress.toString()) {
+        order[0].shippingAddress = address
+        delete order[0].customer
+      }
+    })
+    order[0].products.forEach((product) => {
+      order[0].items.forEach((item) => {
+        if (item.productId.toString() === product._id.toString()) {
+          item.productName = product.productTitle
+          item.imgUrl = product.imgUrls[0]
+        }
+      })
+    })
+    delete order[0].products
+    res.render('admin/invoice', { path: '/orders', order: order[0] })
   } catch (err) {
     console.log(err)
   }

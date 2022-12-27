@@ -7,16 +7,19 @@
     >
       <h1 class="text-sm">ORDER ID #<%= order._id %></h1>
       <div class="text-xs lg:text-sm flex items-center gap-1">
-        <% if(order.status==='pending'){ %>
+        <% if(order.status==='processing'){ %>
         <div class="bg-yellow-400 rounded-full w-2 h-2"></div>
-        <% }else if(order.status==='processing'){ %>
-        <div class="bg-blue-400 rounded-full w-2 h-2"></div>
+        <% }else if(order.status==='shipped'){ %>
+        <div class="bg-blue-500 rounded-full w-2 h-2"></div>
         <% }else if(order.status==='delivered'){%>
         <div class="bg-green-500 rounded-full w-2 h-2"></div>
         <% }else if(order.status==='cancelled'){ %>
         <div class="bg-red-500 rounded-full w-2 h-2"></div>
         <% } %>
-        <div class="capitalize"><%= order.status %></div>
+        <div class="capitalize">
+          <%= order.status %><%=order.status==='delivered'?` on ${new
+          Date(order.deliveredOn).toISOString().replace(/T.*/,'').split('-').reverse().join('-')}`:null%>
+        </div>
       </div>
     </div>
     <!--  -->
@@ -34,7 +37,7 @@
     </div>
     <% }) %>
     <!--  -->
-    <% if(order.status=='processing' || order.status=='pending' ){ %>
+    <% if(order.status=='processing' || order.status=='shipped' ){ %>
     <form
       action="/cancel-order/<%= order._id %>"
       method="post"

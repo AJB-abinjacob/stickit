@@ -2,7 +2,19 @@
 <html lang="en">
   <head>
     <%- include("../partials/admin-head") %>
+    <script defer src="/js/for-invoice.js"></script>
   </head>
+  <style>
+    @media print {
+      #header * {
+        display: none;
+      }
+      #printBtnDiv * {
+        display: none;
+      }
+    }
+  </style>
+
   <body class="bg-backgroundGray">
     <section class="flex">
       <%- include("./layouts/sidebar") %>
@@ -21,9 +33,9 @@
             <%- include("./components/invoice/invoice-monetory-details") %>
           </div>
           <!-- buttons -->
-          <div class="mt-5 flex justify-end">
-            
+          <div id="printBtnDiv" class="mt-5 flex justify-end">
             <button
+              id="printBtn"
               class="bg-turquoise px-5 py-2 uppercase rounded-lg hover:bg-black hover:text-turquoise"
             >
               PRINT INVOICE
@@ -32,5 +44,11 @@
         </section>
       </main>
     </section>
+    <script>
+      document.getElementById('printBtn').addEventListener('click', () => {
+        document.title = 'Invoice-<%=order._id%>'
+        window.print()
+      })
+    </script>
   </body>
 </html>
