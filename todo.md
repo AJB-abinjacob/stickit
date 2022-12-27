@@ -7,6 +7,7 @@
 [] choose address or payment method validation feedback
 [] choose coupon based on minimum amount
 [] add address
+[] reduce stock when order is placed
 [] if payment success add coupon to used list
 [] show not used coupons
 
@@ -19,8 +20,4 @@
 [] modal for cofirm cancel
 [] pagination to show orders
 
-### login & signup
 
-[] otp verification
-[] session handling
-[] authorization
