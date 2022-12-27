@@ -9,8 +9,20 @@ const Coupon = require('../models/couponModel')
 const Order = require('../models/orderModel')
 
 const razorpay = require('../utils/razorpay')
+const msg = require('../utils/msg91')
 
 const ITEMS_PER_PAGE = 1
+
+const generateOTP = (length = 4) => {
+  // Declare a digits variable
+  // which stores all digits
+  const digits = '0123456789'
+  let OTP = ''
+  for (let i = 0; i < length; i++) {
+    OTP += digits[Math.floor(Math.random() * 10)]
+  }
+  return OTP
+}
 
 exports.getLogin = async (req, res) => {
   try {
@@ -56,15 +68,25 @@ exports.postLogout = async (req, res) => {
 
 exports.getOtpLogin = async (req, res) => {
   try {
-    res.render('shop/logins/otp-login')
+    res.render('shop/logins/otp-login', { message: req.flash('message') })
   } catch (err) {
     console.log(err)
   }
 }
 
-exports.postVerifyPhone = async (req, res) => {
+exports.postVerifyOTPLogin = async (req, res) => {
   try {
     const { phone } = req.body
+    const customer = await Customer.findByPhone(phone)
+    if (!customer) {
+      req.flash('message', 'No user found')
+      return res.redirect('/otp-login')
+    }
+    const smsOptions = {
+      phone,
+      otp: generateOTP()
+    }
+    await msg.sendOTP(smsOptions)
     res.render('shop/logins/verify-otp', { phone })
   } catch (err) {
     console.log(err)
@@ -79,7 +101,7 @@ exports.getSignup = async (req, res) => {
   }
 }
 
-exports.postSignup = async (req, res) => {
+exports.postVerifyPhone = async (req, res) => {
   try {
     const { name, email, phone, password, confirmPassword } = req.body
     const nameRegex = /^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/
@@ -122,7 +144,36 @@ exports.postSignup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 12)
     const user = new Customer(name, email, phone, hashedPassword)
     await user.save()
-    res.redirect('/login')
+    const smsOptions = {
+      phone,
+      otp: generateOTP()
+    }
+    await msg.sendOTP(smsOptions)
+    res.render('shop/logins/verify-otp', { phone })
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+exports.postVerifyOTP = async (req, res) => {
+  try {
+    const { otp, phone } = req.body
+    const customer = await Customer.findByPhone(phone)
+    req.session.userId = customer._id.toString()
+    req.session.save((err) => {
+      if (err) {
+        console.log(err)
+      }
+      res.redirect('/')
+    })
+    const smsOptions = {
+      phone,
+      otp
+    }
+    const response = await msg.verifyOTP(smsOptions)
+    if (response) {
+      res.redirect('/login')
+    }
   } catch (err) {
     console.log(err)
   }

@@ -68,17 +68,26 @@ router.post(
 )
 
 router.get('/login', shopAuth.isLoggedOut, shopControllers.getLogin)
-router.post('/login', shopControllers.postLogin)
+router.post('/login', shopAuth.isLoggedOut, shopControllers.postLogin)
 router.get('/otp-login', shopAuth.isLoggedOut, shopControllers.getOtpLogin)
-router.post('/verify-phone', shopControllers.postVerifyPhone)
+router.post(
+  '/verify-login',
+  shopAuth.isLoggedOut,
+  shopControllers.postVerifyOTPLogin
+)
 router.get('/signup', shopAuth.isLoggedOut, shopControllers.getSignup)
-router.post('/signup', shopControllers.postSignup)
+router.post(
+  '/verify-phone',
+  shopAuth.isLoggedOut,
+  shopControllers.postVerifyPhone
+)
+router.post('/verify-otp', shopAuth.isLoggedOut, shopControllers.postVerifyOTP)
 router.get(
   '/reset-password',
   shopAuth.isLoggedOut,
   shopControllers.getResetPassword
 )
-router.post('/logout', shopControllers.postLogout)
+router.post('/logout', shopAuth.isLoggedIn, shopControllers.postLogout)
 
 router.get('*', shopControllers.get404)
 
