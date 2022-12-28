@@ -163,15 +163,11 @@ exports.postVerifyOTP = async (req, res) => {
       phone,
       otp
     }
-    if (!customer) {
-      req.flash('message', 'User doesn\'t exist. Please signup.')
-      return res.redirect('/signup')
-    }
     const response = await msg.verifyOTP(smsOptions)
     if (!response) {
       req.flash('message', 'OTP mismatch. Please try again.')
-      // await Customer.deleteOne(customer._id)
-      return res.redirect('/otp-login')
+      await Customer.deleteOne(customer._id)
+      return res.redirect('/signup')
     }
     req.session.userId = customer._id.toString()
     req.session.save((err) => {
@@ -689,7 +685,7 @@ exports.getOrders = async (req, res) => {
 exports.postCancelOrder = async (req, res) => {
   try {
     const orderId = req.params.id
-    await Order.update(orderId, { status: 'cancelled' })
+    await Order.updateOne(orderId, { status: 'cancelled' })
     res.redirect('/orders')
   } catch (err) {
     console.log(err)

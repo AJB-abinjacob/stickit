@@ -100,11 +100,17 @@ class Customer {
     )
   }
 
+  static deleteOne (id) {
+    const db = getDb()
+    return db.collection('customers').deleteOne({ _id: ObjectId(id) })
+  }
+
   static fetchCart (userId) {
     const db = getDb()
     return db
       .collection('customers')
-      .find({ _id: ObjectId(userId) }).project({ cart: 1 })
+      .find({ _id: ObjectId(userId) })
+      .project({ cart: 1 })
       .toArray()
   }
 
@@ -174,10 +180,7 @@ class Customer {
     const db = getDb()
     return db
       .collection('customers')
-      .updateOne(
-        { _id: ObjectId(userId) },
-        { $set: { cart: [] } }
-      )
+      .updateOne({ _id: ObjectId(userId) }, { $set: { cart: [] } })
   }
 
   static decrementQuantity (userId, productId) {

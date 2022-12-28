@@ -10,15 +10,15 @@ const addressBtnHandler = (e) => {
   addressDiv.forEach((item) => {
     if (item !== e.target.parentNode) {
       item.classList.add('hidden') // hiding all other addresses
-      e.target.parentNode.classList.remove('border-t') // removing the border-t from the current address
-      changeAddressBtn.classList.remove('hidden') // showing the change address button
-      e.target.classList.add('hidden') // hiding the current deliver here button
-      e.target.parentNode.children[0].children[0].children[0].classList.replace(
-        'bg-veryLightGray',
-        'bg-turquoise'
-      ) // changing the background of the span near the address title
     }
   })
+  e.target.parentNode.classList.remove('border-t') // removing the border-t from the current address
+  e.target.parentNode.children[0].children[0].children[0].classList.replace(
+    'bg-veryLightGray',
+    'bg-turquoise'
+  ) // changing the background of the span near the address title
+  changeAddressBtn.classList.remove('hidden') // showing the change address button
+  e.target.classList.add('hidden') // hiding the current deliver here button
   addNewAddressDiv.classList.add('hidden')
   addNewAddressForm.classList.add('hidden')
 }
@@ -49,18 +49,19 @@ const addressCancelBtnHandler = (e) => {
 }
 
 // event handlers
-addressBtn.forEach((btn) => {
-  btn.addEventListener('click', addressBtnHandler)
-})
+if (addressBtn) {
+  addressBtn.forEach((btn) => {
+    btn.addEventListener('click', addressBtnHandler)
+  })
+}
 if (changeAddressBtn) {
   changeAddressBtn.addEventListener('click', changeAddressBtnHandler)
 }
 if (addNewAddressDiv) {
   addNewAddressDiv.addEventListener('click', addNewAddressDivHandler)
 }
-if (addressCancelBtn) {
-  addressCancelBtn.addEventListener('click', addressCancelBtnHandler)
-}
+
+addressCancelBtn.addEventListener('click', addressCancelBtnHandler)
 
 // total price div
 const paynowBtn = document.querySelector('#paynowBtn')
