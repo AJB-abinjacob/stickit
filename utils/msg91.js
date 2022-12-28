@@ -19,19 +19,15 @@ exports.sendOTP = (smsOptions) => {
     }
     const req = http.request(options, function (res) {
       const chunks = []
-
       res.on('data', function (chunk) {
         chunks.push(chunk)
       })
 
       res.on('end', function () {
         const body = Buffer.concat(chunks).toString()
-        console.log(body)
-
         if (JSON.parse(body).type === 'error') {
           resolve(false)
         }
-
         resolve(true)
       })
     })
@@ -66,12 +62,10 @@ exports.verifyOTP = (smsOptions) => {
       })
 
       res.on('end', function () {
-        const body = Buffer.concat(chunks)
-        console.log(body.toString())
+        const body = Buffer.concat(chunks).toString()
         if (JSON.parse(body).type === 'error') {
           resolve(false)
         }
-
         resolve(true)
       })
     })

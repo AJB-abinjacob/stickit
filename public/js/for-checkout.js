@@ -52,9 +52,15 @@ const addressCancelBtnHandler = (e) => {
 addressBtn.forEach((btn) => {
   btn.addEventListener('click', addressBtnHandler)
 })
-changeAddressBtn.addEventListener('click', changeAddressBtnHandler)
-addNewAddressDiv.addEventListener('click', addNewAddressDivHandler)
-addressCancelBtn.addEventListener('click', addressCancelBtnHandler)
+if (changeAddressBtn) {
+  changeAddressBtn.addEventListener('click', changeAddressBtnHandler)
+}
+if (addNewAddressDiv) {
+  addNewAddressDiv.addEventListener('click', addNewAddressDivHandler)
+}
+if (addressCancelBtn) {
+  addressCancelBtn.addEventListener('click', addressCancelBtnHandler)
+}
 
 // total price div
 const paynowBtn = document.querySelector('#paynowBtn')

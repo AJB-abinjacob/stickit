@@ -11,7 +11,7 @@ const Order = require('../models/orderModel')
 const razorpay = require('../utils/razorpay')
 const msg = require('../utils/msg91')
 
-const ITEMS_PER_PAGE = 1
+const ITEMS_PER_PAGE = 10
 
 const generateOTP = (length = 4) => {
   // Declare a digits variable
@@ -159,6 +159,20 @@ exports.postVerifyOTP = async (req, res) => {
   try {
     const { otp, phone } = req.body
     const customer = await Customer.findByPhone(phone)
+    const smsOptions = {
+      phone,
+      otp
+    }
+    if (!customer) {
+      req.flash('message', 'User doesn\'t exist. Please signup.')
+      return res.redirect('/signup')
+    }
+    const response = await msg.verifyOTP(smsOptions)
+    if (!response) {
+      req.flash('message', 'OTP mismatch. Please try again.')
+      // await Customer.deleteOne(customer._id)
+      return res.redirect('/otp-login')
+    }
     req.session.userId = customer._id.toString()
     req.session.save((err) => {
       if (err) {
@@ -166,14 +180,6 @@ exports.postVerifyOTP = async (req, res) => {
       }
       res.redirect('/')
     })
-    const smsOptions = {
-      phone,
-      otp
-    }
-    const response = await msg.verifyOTP(smsOptions)
-    if (response) {
-      res.redirect('/login')
-    }
   } catch (err) {
     console.log(err)
   }
