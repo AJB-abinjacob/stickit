@@ -211,7 +211,6 @@ exports.getOrders = async (req, res) => {
       })
     })
 
-    console.log(orders)
     res.render('admin/orders', {
       path: '/orders',
       orders,
